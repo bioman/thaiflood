@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Emergency</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>Emergency 1</string>
+			<key>number</key>
+			<string>1123</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Emergency 2</string>
+			<key>number</key>
+			<string>1566</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Emergency 3</string>
+			<key>number</key>
+			<string>1342</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Emergency 4</string>
+			<key>number</key>
+			<string>1123</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Emergency 5</string>
+			<key>number</key>
+			<string>1123</string>
+		</dict>
+	</array>
+	<key>Hospital</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>Abc Hospital</string>
+			<key>number</key>
+			<string>024535645</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Wadtes Hospital</string>
+			<key>number</key>
+			<string>024535645</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Doooo Hospital</string>
+			<key>number</key>
+			<string>024535645</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>JJ Hospital</string>
+			<key>number</key>
+			<string>024535645</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Object Hospital</string>
+			<key>number</key>
+			<string>024535645</string>
+		</dict>
+	</array>
+	<key>Way</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>Ask way 1</string>
+			<key>number</key>
+			<string>1122</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Ask way 2</string>
+			<key>number</key>
+			<string>1122</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Ask way 3</string>
+			<key>number</key>
+			<string>1122</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Ask way 3</string>
+			<key>number</key>
+			<string>1122</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Ask way 4</string>
+			<key>number</key>
+			<string>1122</string>
+		</dict>
+	</array>
+	<key>Police</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>Police 1</string>
+			<key>number</key>
+			<string>02245353</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Police 2</string>
+			<key>number</key>
+			<string>02245353</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Police 3</string>
+			<key>number</key>
+			<string>02245353</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Police 4</string>
+			<key>number</key>
+			<string>02245353</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Police 5</string>
+			<key>number</key>
+			<string>02245353</string>
+		</dict>
+	</array>
+	<key>Other</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>Abcde</string>
+			<key>number</key>
+			<string>1334</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Efgh</string>
+			<key>number</key>
+			<string>1334</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Qwer</string>
+			<key>number</key>
+			<string>3334</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Yoez</string>
+			<key>number</key>
+			<string>0814266434</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>Wasdd</string>
+			<key>number</key>
+			<string>1334</string>
+		</dict>
+	</array>
+</dict>
+</plist>
