@@ -8,8 +8,13 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "Tab1MainViewController.h"
+#import "AnnotationView.h"
+#import "CurrentLocationAnnotation.h"
+#import "ASIFormDataRequest.h"
+#import "MBProgressHUD.h"
 
 @implementation Tab1MainViewController
+@synthesize mvMapView,locationManager, currentLocation;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,6 +32,204 @@
     
     // Release any cached data, images, etc that aren't in use.
 }
+
+
+#pragma mark -
+#pragma mark Core Location
+- (void)locationManager:(CLLocationManager *)manager
+	didUpdateToLocation:(CLLocation *)newLocation
+		   fromLocation:(CLLocation *)oldLocation 
+{	
+	[locationManager stopUpdatingLocation];
+	if(currentLocation == nil) self.currentLocation = newLocation;
+	else if (newLocation.horizontalAccuracy < self.currentLocation.horizontalAccuracy) self.currentLocation = newLocation;
+	
+	mvMapView.region = MKCoordinateRegionMake(self.currentLocation.coordinate, MKCoordinateSpanMake(0.5f, 0.5f));	
+	[mvMapView setShowsUserLocation:NO];
+	
+	//CurrentLocationAnnotation *annotation = [[[CurrentLocationAnnotation alloc] initWithCoordinate:self.currentLocation.coordinate addressDictionary:nil] autorelease];
+	//annotation.title = @"1";
+	//annotation.subtitle = @"Drag pin to set poisition.";
+    
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error 
+{	
+	NSString* errorType = (error.code == kCLErrorDenied) ? @"Access Denied" : @"Unknown Error";
+	UIAlertView* locationAlert = [[UIAlertView alloc] initWithTitle:@"Error Getting Location"
+															message:errorType
+														   delegate:nil
+												  cancelButtonTitle:@"OK" 
+												  otherButtonTitles:nil];
+	[locationAlert show];
+	[locationAlert release];
+	[errorType release];
+}
+
+#pragma mark -
+#pragma mark Map Kit
+- (MKAnnotationView *)mapView:(MKMapView *)MapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
+	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
+	MKAnnotationView *draggablePinView = [MapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
+	
+	if (draggablePinView) {
+		draggablePinView.annotation = annotation;
+	} else {		
+		draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
+		if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
+			((AnnotationView *)draggablePinView).mapView = MapView;
+		}
+        draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+        draggablePinView.canShowCallout = YES;
+	}
+	return draggablePinView;
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
+{
+	if (oldState == MKAnnotationViewDragStateDragging) {
+        selectedAnnotation = (CurrentLocationAnnotation *)annotationView.annotation;
+        
+        NSString *_url = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f2&language=th&sensor=false", selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude];
+        NSString *_fixedURL = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)_url, NULL, NULL, kCFStringEncodingUTF8);
+        
+        
+        // initiate request
+        ASIFormDataRequest *request2 = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:_fixedURL]];
+        [request2 setDelegate:self];
+        [request2 startAsynchronous];
+        
+        
+        // add HUD
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = @"Getting Coordinates";
+        
+        
+        
+        
+        
+		
+		selectedAnnotation.subtitle = [NSString stringWithFormat:@"%f %f", selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude];
+        //[self connectDots];
+	}
+}
+
+-(MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id)overlay{
+    MKPolylineView *polyLineView = [[[MKPolylineView alloc] initWithOverlay:overlay] autorelease];
+    polyLineView.strokeColor = [UIColor redColor];
+    polyLineView.lineWidth = 5.0;
+    return polyLineView;
+}
+
+-(void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
+{
+    
+    //DetailViewController *detailViewController = [[DetailViewController alloc] initWithCurrentAnnotation:selectedAnnotation];
+    //[self.navigationController pushViewController:detailViewController animated:YES];
+    //[detailViewController release];
+}
+
+#pragma mark - NSURLConnection Delegate
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    
+    //data 
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    
+    
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    
+    
+}
+
+#pragma mark - ASIHTTPRequest Delegate
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    NSError *error = [request error];
+    NSLog(@"",[error localizedDescription]);
+    //textView.text = [error localizedDescription];
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    
+    if (request.responseStatusCode == 200)
+    {
+        NSString *responseString = [request responseString];
+        NSLog(@"responseString = %@",responseString);
+        // create dictionary from JSON text
+        NSDictionary *responseDict = [responseString JSONValue];
+        
+        // retrieve the longitude and latitude from JSON response
+        NSString *status = [responseDict objectForKey:@"status"];
+        NSArray *results = (NSArray *)[responseDict objectForKey:@"results"];
+        if([results count] > 0){
+            NSDictionary *data = (NSDictionary *)[results objectAtIndex:0];
+            NSDictionary *address_components = (NSDictionary *)[data objectForKey:@"address_components"];
+            //NSDictionary *latlng = (NSDictionary *)[address_components objectForKey:@"long_name"];
+            NSLog(@"%i",[address_components count]);
+            NSLog(@"long_name %@", [(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"]);
+            [selectedAnnotation setTitle:[NSString stringWithFormat:@"%@ %@",[(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"],[(NSDictionary *)[address_components objectAtIndex:1] objectForKey:@"long_name"]]];
+            [selectedAnnotation setSubtitle:[NSString stringWithFormat:@"%f,%f",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude]];
+        }else{
+            [selectedAnnotation setTitle:@"Unknown"];
+        }
+        // change textView text        
+        //textView.text = [NSString stringWithFormat:@"Latitude:%@\nLongitude:%@", [latlng objectForKey:@"lat"],[latlng objectForKey:@"lng"]];
+    }
+    
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+
+
+#pragma mark - Map Features
+
+- (void)addPoint
+{
+    selectedAnnotation = [[[CurrentLocationAnnotation alloc] initWithCoordinate:self.currentLocation.coordinate addressDictionary:nil] autorelease];
+    //	annotation.title = [[NSString alloc] initWithFormat:@"%d", [mvMapView.annotations count] + 1];
+    //	annotation.subtitle = @"Drag pin to set poisition.";
+    //    
+    //    [mvMapView addAnnotation:annotation];
+    //    [annotation release];
+    
+    selectedAnnotation = [[[CurrentLocationAnnotation alloc] initWithCoordinate:self.currentLocation.coordinate addressDictionary:nil] autorelease];
+    
+    NSString *_url = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f2&language=th&sensor=false", selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude];
+    NSString *_fixedURL = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)_url, NULL, NULL, kCFStringEncodingUTF8);
+    
+    
+    // initiate request
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:_fixedURL]];
+    [request setDelegate:self];
+    [request startAsynchronous];
+    
+    
+    // add HUD
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Getting Coordinates";
+    
+	[mvMapView addAnnotation:selectedAnnotation];
+}
+
+- (void)searchPoint
+{
+    
+}
+
+
 
 #pragma mark - View lifecycle
 
@@ -64,33 +267,49 @@
     UIBarButtonItem *customBarItem2 = [[UIBarButtonItem alloc] initWithCustomView:button2];
     [self.navigationItem setLeftBarButtonItem:customBarItem2];
     [customBarItem2 release];
+    
+    
+    
+    [mvMapView setMapType:MKMapTypeHybrid];
+	[mvMapView setDelegate:self];
+    
+	locationManager = [[CLLocationManager alloc] init];
+	[locationManager setDelegate:self];
+	[locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+	if(![CLLocationManager locationServicesEnabled]) {
+		UIAlertView *locationServiceDisabledAlert = [[UIAlertView alloc] 
+													 initWithTitle:@"Location Services Disabled"
+													 message:@"Location Service is disabled on this device. To enable Location Services go to Settings -> General and set the Location Services switch to ON"
+													 delegate:self
+													 cancelButtonTitle:@"Ok"
+													 otherButtonTitles:nil];
+		[locationServiceDisabledAlert show];
+		[locationServiceDisabledAlert release];
+	}
+    
+    [locationManager startUpdatingLocation];
 
 }
 
 
 - (void)viewDidUnload
 {
+    [self setMvMapView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)dealloc
+{
+    [mvMapView release];
+    [super dealloc];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-#pragma mark - Map Features
-
-- (void)addPoint
-{
-    
-}
-
-- (void)searchPoint
-{
-    
 }
 
 
