@@ -50,6 +50,8 @@
 		4516F7E2145EB00F00699725 /* Tab4DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4516F7E0145EB00F00699725 /* Tab4DetailViewController.xib */; };
 		4516F7EB145EC7BD00699725 /* Tab3DetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4516F7EA145EC7BD00699725 /* Tab3DetailTableViewCell.xib */; };
 		4516F7F2145EC95D00699725 /* Tab3DetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4516F7F1145EC95D00699725 /* Tab3DetailTableViewCell.m */; };
+		453BB0F514611F500030F83F /* AnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453BB0F214611F500030F83F /* AnnotationView.m */; };
+		453BB0F614611F500030F83F /* CurrentLocationAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 453BB0F414611F500030F83F /* CurrentLocationAnnotation.m */; };
 		453CD3F9145D9C7900F29612 /* RXCustomTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 453CD3F8145D9C7900F29612 /* RXCustomTabBar.m */; };
 		453CD40A145DACB700F29612 /* tab1.png in Resources */ = {isa = PBXBuildFile; fileRef = 453CD3FA145DACB700F29612 /* tab1.png */; };
 		453CD40B145DACB700F29612 /* tab1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 453CD3FB145DACB700F29612 /* tab1@2x.png */; };
@@ -159,8 +161,6 @@
 		84A4CCE4145E5E68009DD339 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4CCE3145E5E68009DD339 /* main.m */; };
 		84A4CCE7145E5E69009DD339 /* thaifloodAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A4CCE6145E5E69009DD339 /* thaifloodAppDelegate.m */; };
 		84A4CCEA145E5E69009DD339 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84A4CCE8145E5E69009DD339 /* MainWindow.xib */; };
-		CAE68EAA1460064D00CA766D /* AnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = CAE68EA71460064D00CA766D /* AnnotationView.m */; };
-		CAE68EAB1460064D00CA766D /* CurrentLocationAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = CAE68EA91460064D00CA766D /* CurrentLocationAnnotation.m */; };
 		CAE68F00146007D700CA766D /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = CAE68EAF146007D700CA766D /* ASIAuthenticationDialog.m */; };
 		CAE68F01146007D700CA766D /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = CAE68EB2146007D700CA766D /* ASIDataCompressor.m */; };
 		CAE68F02146007D700CA766D /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = CAE68EB4146007D700CA766D /* ASIDataDecompressor.m */; };
@@ -255,6 +255,10 @@
 		4516F7EA145EC7BD00699725 /* Tab3DetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tab3DetailTableViewCell.xib; sourceTree = "<group>"; };
 		4516F7F0145EC95D00699725 /* Tab3DetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab3DetailTableViewCell.h; sourceTree = "<group>"; };
 		4516F7F1145EC95D00699725 /* Tab3DetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab3DetailTableViewCell.m; sourceTree = "<group>"; };
+		453BB0F114611F500030F83F /* AnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnnotationView.h; sourceTree = "<group>"; };
+		453BB0F214611F500030F83F /* AnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnnotationView.m; sourceTree = "<group>"; };
+		453BB0F314611F500030F83F /* CurrentLocationAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentLocationAnnotation.h; sourceTree = "<group>"; };
+		453BB0F414611F500030F83F /* CurrentLocationAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentLocationAnnotation.m; sourceTree = "<group>"; };
 		453CD3F7145D9C7900F29612 /* RXCustomTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXCustomTabBar.h; sourceTree = "<group>"; };
 		453CD3F8145D9C7900F29612 /* RXCustomTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXCustomTabBar.m; sourceTree = "<group>"; };
 		453CD3FA145DACB700F29612 /* tab1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab1.png; sourceTree = "<group>"; };
@@ -379,10 +383,6 @@
 		84A4CCE5145E5E69009DD339 /* thaifloodAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = thaifloodAppDelegate.h; sourceTree = "<group>"; };
 		84A4CCE6145E5E69009DD339 /* thaifloodAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = thaifloodAppDelegate.m; sourceTree = "<group>"; };
 		84A4CCE9145E5E69009DD339 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		CAE68EA61460064D00CA766D /* AnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnnotationView.h; sourceTree = "<group>"; };
-		CAE68EA71460064D00CA766D /* AnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnnotationView.m; sourceTree = "<group>"; };
-		CAE68EA81460064D00CA766D /* CurrentLocationAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentLocationAnnotation.h; sourceTree = "<group>"; };
-		CAE68EA91460064D00CA766D /* CurrentLocationAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentLocationAnnotation.m; sourceTree = "<group>"; };
 		CAE68EAE146007D700CA766D /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		CAE68EAF146007D700CA766D /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		CAE68EB0146007D700CA766D /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
@@ -492,6 +492,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		453BB0F014611F500030F83F /* Annotation */ = {
+			isa = PBXGroup;
+			children = (
+				453BB0F114611F500030F83F /* AnnotationView.h */,
+				453BB0F214611F500030F83F /* AnnotationView.m */,
+				453BB0F314611F500030F83F /* CurrentLocationAnnotation.h */,
+				453BB0F414611F500030F83F /* CurrentLocationAnnotation.m */,
+			);
+			path = Annotation;
+			sourceTree = "<group>";
+		};
 		453CD3F2145D9B6E00F29612 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -539,7 +550,7 @@
 		453CD3F4145D9B8E00F29612 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CAE68EA51460064D00CA766D /* Annotation */,
+				453BB0F014611F500030F83F /* Annotation */,
 				453CD446145DC8C600F29612 /* Tab1MainViewController.h */,
 				453CD447145DC8C600F29612 /* Tab1MainViewController.m */,
 				45F8F87F145FE92200E4C9D9 /* Tab1AddViewController.h */,
@@ -749,17 +760,6 @@
 				84A4CCE3145E5E68009DD339 /* main.m */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		CAE68EA51460064D00CA766D /* Annotation */ = {
-			isa = PBXGroup;
-			children = (
-				CAE68EA61460064D00CA766D /* AnnotationView.h */,
-				CAE68EA71460064D00CA766D /* AnnotationView.m */,
-				CAE68EA81460064D00CA766D /* CurrentLocationAnnotation.h */,
-				CAE68EA91460064D00CA766D /* CurrentLocationAnnotation.m */,
-			);
-			path = Annotation;
 			sourceTree = "<group>";
 		};
 		CAE68EAC146007D700CA766D /* Library */ = {
@@ -1103,8 +1103,6 @@
 				45F8F84A145F989400E4C9D9 /* Database.m in Sources */,
 				45F8F84D145F99B800E4C9D9 /* Number.m in Sources */,
 				45F8F882145FE92200E4C9D9 /* Tab1AddViewController.m in Sources */,
-				CAE68EAA1460064D00CA766D /* AnnotationView.m in Sources */,
-				CAE68EAB1460064D00CA766D /* CurrentLocationAnnotation.m in Sources */,
 				CAE68F00146007D700CA766D /* ASIAuthenticationDialog.m in Sources */,
 				CAE68F01146007D700CA766D /* ASIDataCompressor.m in Sources */,
 				CAE68F02146007D700CA766D /* ASIDataDecompressor.m in Sources */,
@@ -1141,6 +1139,8 @@
 				CAE68F21146007D700CA766D /* SBJsonUTF8Stream.m in Sources */,
 				CAE68F22146007D700CA766D /* SBJsonWriter.m in Sources */,
 				CAE68F3114600B4000CA766D /* MBProgressHUD.m in Sources */,
+				453BB0F514611F500030F83F /* AnnotationView.m in Sources */,
+				453BB0F614611F500030F83F /* CurrentLocationAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

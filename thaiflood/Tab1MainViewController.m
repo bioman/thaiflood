@@ -12,6 +12,7 @@
 #import "CurrentLocationAnnotation.h"
 #import "ASIFormDataRequest.h"
 #import "MBProgressHUD.h"
+#import "Tab1AddViewController.h"
 
 @implementation Tab1MainViewController
 @synthesize mvMapView,locationManager, currentLocation;
@@ -157,7 +158,7 @@
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
     NSError *error = [request error];
-    NSLog(@"",[error localizedDescription]);
+    NSLog(@"%@",[error localizedDescription]);
     //textView.text = [error localizedDescription];
 }
 
@@ -222,6 +223,12 @@
     hud.labelText = @"Getting Coordinates";
     
 	[mvMapView addAnnotation:selectedAnnotation];
+    
+//    Tab1AddViewController *addViewController = [[Tab1AddViewController alloc] initWithNibName:@"Tab1AddViewController" bundle:nil];
+//    [self.navigationController pushViewController:addViewController animated:YES];
+//    [addViewController release];
+    
+    
 }
 
 - (void)searchPoint

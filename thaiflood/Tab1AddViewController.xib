@@ -603,7 +603,7 @@
 										<string key="NSFrame">{{25, 917}, {263, 123}}</string>
 										<reference key="NSSuperview" ref="1817025"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView" ref="37046600"/>
+										<reference key="NSNextKeyView" ref="723979865"/>
 										<string key="NSReuseIdentifierKey">_NS:639</string>
 										<object class="NSColor" key="IBUIBackgroundColor">
 											<int key="NSColorSpace">1</int>
@@ -649,6 +649,7 @@
 										<string key="NSFrame">{{0, 1147}, {320, 32}}</string>
 										<reference key="NSSuperview" ref="1817025"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:328</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<bool key="IBUIClipsSubviews">YES</bool>
@@ -679,13 +680,14 @@
 										<string key="NSFrame">{{10, 1078}, {300, 3}}</string>
 										<reference key="NSSuperview" ref="1817025"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView" ref="37046600"/>
 										<string key="NSReuseIdentifierKey">_NS:567</string>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 										<reference key="IBUIImage" ref="638368045"/>
 									</object>
 								</array>
-								<string key="NSFrame">{{0, -370}, {320, 1200}}</string>
+								<string key="NSFrameSize">{320, 1200}</string>
 								<reference key="NSSuperview" ref="466399775"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="976102724"/>
@@ -700,10 +702,11 @@
 						<string key="NSFrameSize">{320, 460}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="1817025"/>
 						<string key="NSReuseIdentifierKey">_NS:190</string>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
+						<int key="IBUITag">1111</int>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</array>

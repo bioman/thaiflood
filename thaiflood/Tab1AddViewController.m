@@ -32,7 +32,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+        
+    UIScrollView *_scrollView = (UIScrollView*)[self.view viewWithTag:1111];
+    [_scrollView setContentSize:CGSizeMake(320, 1200)];
+    
+    UIImage *buttonImage = [UIImage imageNamed:@"button_back.png"];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button addTarget:self action:@selector(backToMain) forControlEvents:UIControlEventTouchUpInside];
+    [button setImage:buttonImage forState:UIControlStateNormal];
+    button.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
+    UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    [self.navigationItem setLeftBarButtonItem:customBarItem];
+    [customBarItem release];
 }
 
 - (void)viewDidUnload
@@ -47,5 +58,11 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+- (void) backToMain
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 
 @end
