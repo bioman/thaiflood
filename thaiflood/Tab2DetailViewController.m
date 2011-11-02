@@ -12,6 +12,12 @@
 #import "Tab2ShareTwitterViewController.h"
 
 @implementation Tab2DetailViewController
+@synthesize annoucementDetail;
+@synthesize dateLabel;
+@synthesize timeLabel;
+@synthesize fromLabel;
+@synthesize detailTextView;
+@synthesize dateDiffLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -56,13 +62,34 @@
     newShadow.frame = CGRectMake(0,navigationBarBottom, self.view.frame.size.width, 3);
     newShadow.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
     [self.view.layer addSublayer:newShadow];
+    
+    //set data
+    [self setData];
+    
+    
 }
 
 - (void)viewDidUnload
 {
+    [self setDateLabel:nil];
+    [self setTimeLabel:nil];
+    [self setFromLabel:nil];
+    [self setDetailTextView:nil];
+    [self setDateDiffLabel:nil];
+    [self setAnnoucementDetail:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)dealloc {
+    [dateLabel release];
+    [timeLabel release];
+    [fromLabel release];
+    [detailTextView release];
+    [dateDiffLabel release];
+    [annoucementDetail release];
+    [super dealloc];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -74,6 +101,73 @@
 - (void) backToMain
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark-
+#pragma mark Custom Method
+-(NSString *)dateDiff:(NSString *)origDate {
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *convertedDate = [df dateFromString:origDate];
+    [df release];
+    NSDate *todayDate = [NSDate date];
+    double ti = [convertedDate timeIntervalSinceDate:todayDate];
+    ti = ti * -1;
+    if(ti < 1) {
+        return @"just now";
+    } else      if (ti < 60) {
+        int diff = round(ti);
+        return [NSString stringWithFormat:@"%d seconds ago", diff];
+    } else if (ti < 3600) {
+        int diff = round(ti / 60);
+        return [NSString stringWithFormat:@"%d minutes ago", diff];
+    } else if (ti < 86400) {
+        int diff = round(ti / 60 / 60);
+        return[NSString stringWithFormat:@"%d hours ago", diff];
+    } else if (ti < 2629743) {
+        int diff = round(ti / 60 / 60 / 24);
+        return[NSString stringWithFormat:@"%d days ago", diff];
+    } else {
+        return @"never";
+    }   
+}
+
+-(NSString *)getDateFrom:(NSString *)origDate
+{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *convertedDate = [df dateFromString:origDate];
+    [df setDateFormat:@"d/MM/yyyy"];
+    NSString *dateOnly = [NSString stringWithString:[df stringFromDate:convertedDate]];
+    [df release];
+    return dateOnly; 
+}
+
+-(NSString *)getTimeFrom:(NSString *)origDate
+{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *convertedDate = [df dateFromString:origDate];
+    [df setDateFormat:@"HH:mm:ss"];
+    NSString *timeOnly = [NSString stringWithString:[df stringFromDate:convertedDate]];
+    [df release];
+    return timeOnly; 
+}
+
+- (void)setData
+{
+    
+    //set value
+    [self.dateDiffLabel setText:[self dateDiff:[annoucementDetail objectForKey:@"created_date"]]];
+    [self.dateLabel setText:[self getDateFrom:[annoucementDetail objectForKey:@"created_date"]]];
+    [self.timeLabel setText:[self getTimeFrom:[annoucementDetail objectForKey:@"created_date"]]];
+    [self.fromLabel setText:[NSString stringWithFormat:@"From : %@",[annoucementDetail objectForKey:@"annouce_from"]]];
+    [self.detailTextView setText:[annoucementDetail objectForKey:@"description"]];
+    
+    
 }
 
 - (IBAction)shareFacebook:(id)sender {

@@ -9,7 +9,21 @@
 #import <UIKit/UIKit.h>
 
 @interface Tab2DetailViewController : UIViewController
+{
+    
+    NSDictionary *annoucementDetail;
+    
+}
+
+@property (nonatomic, retain) NSDictionary *annoucementDetail;
+@property (retain, nonatomic) IBOutlet UILabel *dateLabel;
+@property (retain, nonatomic) IBOutlet UILabel *timeLabel;
+@property (retain, nonatomic) IBOutlet UILabel *fromLabel;
+@property (retain, nonatomic) IBOutlet UITextView *detailTextView;
+@property (retain, nonatomic) IBOutlet UILabel *dateDiffLabel;
+
 - (IBAction)shareFacebook:(id)sender;
 - (IBAction)shareTwitter:(id)sender;
+- (void)setData;
 
 @end
