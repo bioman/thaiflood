@@ -22,7 +22,7 @@
 @property (nonatomic, retain) IBOutlet MKMapView *mvMapView;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, retain) CLLocation *currentLocation;
-
-- (IBAction)addPin:(id)sender;
+- (IBAction)cancleAdd:(UIButton*)sender;
+- (IBAction)submitAdd:(UIButton*)sender;
 
 @end

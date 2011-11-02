@@ -13,6 +13,12 @@
 #import "ASIFormDataRequest.h"
 #import "MBProgressHUD.h"
 #import "Tab1AddViewController.h"
+#import "SBJson.h"
+
+@interface Tab1MainViewController (Privated)
+- (void)showSubMenu;
+- (void)hideSubMenu;
+@end
 
 @implementation Tab1MainViewController
 @synthesize mvMapView,locationManager, currentLocation;
@@ -173,14 +179,14 @@
         NSDictionary *responseDict = [responseString JSONValue];
         
         // retrieve the longitude and latitude from JSON response
-        NSString *status = [responseDict objectForKey:@"status"];
+//        NSString *status = [responseDict objectForKey:@"status"];
         NSArray *results = (NSArray *)[responseDict objectForKey:@"results"];
         if([results count] > 0){
             NSDictionary *data = (NSDictionary *)[results objectAtIndex:0];
-            NSDictionary *address_components = (NSDictionary *)[data objectForKey:@"address_components"];
+            NSArray *address_components = (NSArray *)[data objectForKey:@"address_components"];
             //NSDictionary *latlng = (NSDictionary *)[address_components objectForKey:@"long_name"];
             NSLog(@"%i",[address_components count]);
-            NSLog(@"long_name %@", [(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"]);
+//            NSLog(@"long_name %@", [(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"]);
             [selectedAnnotation setTitle:[NSString stringWithFormat:@"%@ %@",[(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"],[(NSDictionary *)[address_components objectAtIndex:1] objectForKey:@"long_name"]]];
             [selectedAnnotation setSubtitle:[NSString stringWithFormat:@"%f,%f",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude]];
         }else{
@@ -224,11 +230,8 @@
     
 	[mvMapView addAnnotation:selectedAnnotation];
     
-//    Tab1AddViewController *addViewController = [[Tab1AddViewController alloc] initWithNibName:@"Tab1AddViewController" bundle:nil];
-//    [self.navigationController pushViewController:addViewController animated:YES];
-//    [addViewController release];
-    
-    
+    //Show sub-menu
+    [self showSubMenu];
 }
 
 - (void)searchPoint
@@ -320,4 +323,35 @@
 }
 
 
+#pragma mark - Sub Menu
+
+- (void)showSubMenu
+{
+    UIView *_subMenuView = [self.view viewWithTag:66];
+    [UIView animateWithDuration:0.4 animations:^{
+        [_subMenuView setFrame:CGRectMake(0, 0, _subMenuView.frame.size.width, _subMenuView.frame.size.height)];
+    } completion:^(BOOL finished){
+        
+    }];
+}
+
+- (void)hideSubMenu
+{
+    UIView *_subMenuView = [self.view viewWithTag:66];
+    [UIView animateWithDuration:0.4 animations:^{
+        [_subMenuView setFrame:CGRectMake(0, -40, _subMenuView.frame.size.width, _subMenuView.frame.size.height)];
+    } completion:^(BOOL finished){
+        
+    }];
+}
+
+- (IBAction)cancleAdd:(UIButton*)sender {
+    [self hideSubMenu];
+}
+
+- (IBAction)submitAdd:(UIButton*)sender {
+    Tab1AddViewController *addViewController = [[Tab1AddViewController alloc] initWithNibName:@"Tab1AddViewController" bundle:nil];
+    [self.navigationController pushViewController:addViewController animated:YES];
+    [addViewController release];
+}
 @end

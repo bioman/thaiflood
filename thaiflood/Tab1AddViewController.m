@@ -44,6 +44,15 @@
     UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
     [self.navigationItem setLeftBarButtonItem:customBarItem];
     [customBarItem release];
+    
+    UIImage *buttonImage2 = [UIImage imageNamed:@"button_post.png"];
+    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button2 addTarget:self action:@selector(postFacebook) forControlEvents:UIControlEventTouchUpInside];
+    [button2 setImage:buttonImage2 forState:UIControlStateNormal];
+    button2.frame = CGRectMake(0, 0, buttonImage2.size.width, buttonImage2.size.height);
+    UIBarButtonItem *customBarItem2 = [[UIBarButtonItem alloc] initWithCustomView:button2];
+    [self.navigationItem setRightBarButtonItem:customBarItem2];
+    [customBarItem2 release];
 }
 
 - (void)viewDidUnload
