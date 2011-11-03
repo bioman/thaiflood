@@ -10,12 +10,16 @@
 #import "Tab2TableViewCell.h"
 #import "Tab2DetailViewController.h"
 
+#import "SBJson.h"
+
 @interface Tab2MainViewController (Privated)
 -(void)startActivity;
 -(void)stopActivity;
 @end
 
 @implementation Tab2MainViewController
+@synthesize annoucementTableView;
+@synthesize annoucementArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -68,13 +72,27 @@
     newShadow.frame = CGRectMake(0,navigationBarBottom, self.view.frame.size.width, 3);
     newShadow.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
     [self.view.layer addSublayer:newShadow];
+    
+    //initial array
+    annoucementArray = [[NSMutableArray alloc] init];
+    //request for data
+    [self makeRequestAnnoucement];
 }
 
 - (void)viewDidUnload
 {
+    self.annoucementArray = nil;
+    [self setAnnoucementTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+
+-(void)dealloc{
+    [annoucementArray release];
+    [annoucementTableView release];
+    [super dealloc];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -83,15 +101,8 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void) refreshFeed
-{
-    if (isLoading) {
-        [self stopActivity];
-    }else{
-        [self startActivity];
-    }
-}
-
+#pragma mark-
+#pragma mark UITableView DataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -100,7 +111,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     tableView.separatorColor = [UIColor grayColor];
-    return 5;
+    return [self.annoucementArray count];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -119,6 +130,11 @@
 		for (id currentObject in topLevelObjects){
 			if ([currentObject isKindOfClass:[UITableViewCell class]]){
 				cell =  (Tab2TableViewCell *) currentObject;
+                
+                NSDictionary *dict = [annoucementArray objectAtIndex:indexPath.row];
+                [cell.tilte setText:[dict objectForKey:@"title"]];
+                [cell.detail setText:[dict objectForKey:@"description"]];
+                [cell.time setText:[self dateDiff:[dict objectForKey:@"created_date"]]];
 				break;
 			}
 		}
@@ -127,14 +143,36 @@
     return cell;
 }
 
+#pragma mark-
+#pragma mark UITableView Delegate
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Tab2DetailViewController *detailViewController = [[Tab2DetailViewController alloc] initWithNibName:@"Tab2DetailViewController" bundle:nil];
+    [detailViewController setAnnoucementDetail:[annoucementArray objectAtIndex:indexPath.row]];
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+
+#pragma mark-
+#pragma mark ASIHTTPRequest Delegate
+-(void) requestFinished: (ASIHTTPRequest *) request {
+    
+    NSString *_strResult = [[[NSString alloc] initWithData:[request responseData] encoding:NSUTF8StringEncoding] autorelease];
+    
+    [self.annoucementArray removeAllObjects];
+    [self.annoucementArray setArray:[_strResult JSONValue]];
+    
+    // reload tableView
+    [annoucementTableView reloadData];
+    // stop activityIndicator
+    [self stopActivity];
+    
+}
+
+#pragma mark-
+#pragma mark Custom Private Method
 -(void)startActivity{
     isLoading = YES;
     [(UIActivityIndicatorView *)[self navigationItem].leftBarButtonItem.customView startAnimating];
@@ -145,8 +183,62 @@
     [(UIActivityIndicatorView *)[self navigationItem].leftBarButtonItem.customView stopAnimating];
 }
 
--(void)dealloc{
-    [super dealloc];
+
+#pragma mark-
+#pragma mark Custom Method
+-(NSString *)dateDiff:(NSString *)origDate {
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *convertedDate = [df dateFromString:origDate];
+    [df release];
+    NSDate *todayDate = [NSDate date];
+    double ti = [convertedDate timeIntervalSinceDate:todayDate];
+    ti = ti * -1;
+    if(ti < 1) {
+        return @"just now";
+    } else      if (ti < 60) {
+        int diff = round(ti);
+        return [NSString stringWithFormat:@"%d seconds ago", diff];
+    } else if (ti < 3600) {
+        int diff = round(ti / 60);
+        return [NSString stringWithFormat:@"%d minutes ago", diff];
+    } else if (ti < 86400) {
+        int diff = round(ti / 60 / 60);
+        return[NSString stringWithFormat:@"%d hours ago", diff];
+    } else if (ti < 2629743) {
+        int diff = round(ti / 60 / 60 / 24);
+        return[NSString stringWithFormat:@"%d days ago", diff];
+    } else {
+        return @"never";
+    }   
+}
+
+- (void) refreshFeed
+{
+//    if (isLoading) {
+//        [self stopActivity];
+//    }else{
+//        [self startActivity];
+//    }
+    [self startActivity];
+    [self makeRequestAnnoucement];
+}
+
+- (IBAction)makeRequestAnnoucement
+{
+    // The url to make the request to
+    NSURL *annoucementURL = [NSURL URLWithString:@"http://www.appspheregroup.com/flood/getannoucement.php"];
+    
+    //The actual request
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:annoucementURL];
+    
+    // Becoming the request delegate
+    //To get callbacks like requestFinished: or requestFailed:
+    [request setDelegate:self];
+    
+    // Fire off the request
+    [request startAsynchronous];
 }
 
 @end
