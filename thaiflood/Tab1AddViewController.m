@@ -74,4 +74,10 @@
 }
 
 
+- (IBAction)dismissKeyboard:(id)sender {
+    UIView *_text = [self.view viewWithTag:21];
+    UIView *_text2 = [self.view viewWithTag:22];
+    [_text resignFirstResponder];
+    [_text2 resignFirstResponder];
+}
 @end
