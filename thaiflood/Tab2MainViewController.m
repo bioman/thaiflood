@@ -146,7 +146,7 @@
         // add HUD
         [cell.mainView setHidden:YES];
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.labelText = @"Getting Announcements";
+        hud.labelText = @"Loading";
     }else{
         [cell.mainView setHidden:NO];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -154,7 +154,7 @@
         [cell.tilte setText:[dict objectForKey:@"title"]];
         [cell.detail setText:[dict objectForKey:@"description"]];
         [cell.time setText:[self dateDiff:[dict objectForKey:@"created_date"]]];
-        [cell.thumb setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/thumbnail/%@",[dict objectForKey:@"thumbnail"]]]]]];
+        [cell thumbnailFromURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/thumbnail/%@",[dict objectForKey:@"thumbnail"]]]];
     }
     
     return cell;
@@ -191,12 +191,16 @@
 #pragma mark-
 #pragma mark Custom Private Method
 -(void)startActivity{
+    // add HUD
     isLoading = YES;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Loading";
     [(UIActivityIndicatorView *)[self navigationItem].leftBarButtonItem.customView startAnimating];
 }
 
 -(void)stopActivity{
     isLoading = NO;
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [(UIActivityIndicatorView *)[self navigationItem].leftBarButtonItem.customView stopAnimating];
 }
 

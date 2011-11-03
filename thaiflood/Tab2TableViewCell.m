@@ -11,7 +11,7 @@
 @implementation Tab2TableViewCell
 @synthesize loadingIndicator;
 @synthesize mainView;
-@synthesize time, tilte, detail, thumb;
+@synthesize time, tilte, detail, thumb, request;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -40,7 +40,34 @@
     [loadingIndicator setHidden:YES];
 }
 
+- (void)thumbnailFromURL:(NSURL*)url
+{
+    [self startLoading];
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
+    self.request = [ASIHTTPRequest requestWithURL:url];
+    [self.request setDelegate:self];
+    [self.request startAsynchronous];
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)_request
+{
+    NSData *responseData = [_request responseData];
+    [self.thumb setImage:[UIImage imageWithData:responseData]];
+    [self stopLoading];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)_request
+{
+    //NSError *error = [request error];
+    [self stopLoading];
+}
+
 - (void)dealloc {
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
     [time release];
     [tilte release];
     [detail release];

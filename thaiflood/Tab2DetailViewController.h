@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ASIHTTPRequest.h"
 
-@interface Tab2DetailViewController : UIViewController
+@interface Tab2DetailViewController : UIViewController <ASIHTTPRequestDelegate>
 {
     
     NSDictionary *annoucementDetail;
+    ASIHTTPRequest *request;
     
 }
 
@@ -19,6 +21,7 @@
 @property (retain, nonatomic) IBOutlet UITextView *detailTextView;
 @property (retain, nonatomic) IBOutlet UILabel *dateDiffLabel;
 @property (retain, nonatomic) IBOutlet UILabel *titleLabel;
+@property (nonatomic, retain) ASIHTTPRequest *request;
 
 - (IBAction)shareFacebook:(id)sender;
 - (IBAction)shareTwitter:(id)sender;

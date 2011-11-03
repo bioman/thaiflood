@@ -16,6 +16,7 @@
 @synthesize detailTextView;
 @synthesize dateDiffLabel;
 @synthesize titleLabel;
+@synthesize request;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -78,6 +79,9 @@
 }
 
 - (void)dealloc {
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
     [detailTextView release];
     [dateDiffLabel release];
     [annoucementDetail release];
@@ -151,12 +155,25 @@
 
 - (void)setData
 {
-    
     //set value
     [self.dateDiffLabel setText:[self dateDiff:[annoucementDetail objectForKey:@"created_date"]]];
     [self.titleLabel setText:[annoucementDetail objectForKey:@"title"]];
-    [self.detailTextView setText:[annoucementDetail objectForKey:@"description"]];
+    [self.detailTextView setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n%@",[annoucementDetail objectForKey:@"description"]]];
     
+    UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    [_loadingView setTag:66];
+    [_loadingView setFrame:CGRectMake(150, 71, 20, 20)];
+    [_loadingView startAnimating];
+    [self.detailTextView addSubview:_loadingView];
+    [_loadingView release];
+    
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
+    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/thumbnail/%@",[annoucementDetail objectForKey:@"picture"]]];
+    self.request = [ASIHTTPRequest requestWithURL:_url];
+    [self.request setDelegate:self];
+    [self.request startAsynchronous];
     
 }
 
@@ -170,5 +187,28 @@
     Tab2ShareTwitterViewController *detailViewController = [[Tab2ShareTwitterViewController alloc] initWithNibName:@"Tab2ShareTwitterViewController" bundle:nil];
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
+}
+
+#pragma mark Request
+- (void)requestFinished:(ASIHTTPRequest *)_request
+{
+    NSData *responseData = [_request responseData];
+    UIImageView *_pic = [[UIImageView alloc]initWithImage:[UIImage imageWithData:responseData]];
+    [_pic setFrame:CGRectMake(72, 17, 175, 128)];
+    [self.detailTextView addSubview:_pic];
+    [_pic release];
+    UIImageView *_border = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"map_border_big.png"]];
+    [_border setFrame:CGRectMake(64, 9, 190, 143)];
+    [self.detailTextView addSubview:_border];
+    [_border release];
+    
+    UIActivityIndicatorView *_loadingView = (UIActivityIndicatorView*)[self.detailTextView viewWithTag:66];
+    [_loadingView stopAnimating];
+    [_loadingView removeFromSuperview];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)_request
+{
+    //NSError *error = [request error];
 }
 @end
