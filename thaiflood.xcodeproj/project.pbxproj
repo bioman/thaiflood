@@ -477,12 +477,12 @@
 			files = (
 				CAE68F2D14600A9400CA766D /* libxml2.dylib in Frameworks */,
 				CAE68F2E14600A9400CA766D /* libz.dylib in Frameworks */,
+				4516F780145E61ED00699725 /* QuartzCore.framework in Frameworks */,
 				CAE68F2714600A7500CA766D /* CFNetwork.framework in Frameworks */,
 				CAE68F2814600A7500CA766D /* CoreLocation.framework in Frameworks */,
 				CAE68F2914600A7500CA766D /* MobileCoreServices.framework in Frameworks */,
 				CAE68F2A14600A7500CA766D /* SystemConfiguration.framework in Frameworks */,
 				453CD45B145DCB5500F29612 /* MapKit.framework in Frameworks */,
-				4516F780145E61ED00699725 /* QuartzCore.framework in Frameworks */,
 				84A4CCD7145E5E68009DD339 /* UIKit.framework in Frameworks */,
 				84A4CCD9145E5E68009DD339 /* Foundation.framework in Frameworks */,
 				84A4CCDB145E5E68009DD339 /* CoreGraphics.framework in Frameworks */,
