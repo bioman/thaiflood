@@ -9,6 +9,8 @@
 #import "Tab2TableViewCell.h"
 
 @implementation Tab2TableViewCell
+@synthesize loadingIndicator;
+@synthesize mainView;
 @synthesize time, tilte, detail, thumb;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -26,10 +28,24 @@
     // Configure the view for the selected state
 }
 
+- (void)startLoading
+{
+    [loadingIndicator setHidden:NO];
+    [loadingIndicator startAnimating];
+}
+
+- (void)stopLoading
+{
+    [loadingIndicator stopAnimating];
+    [loadingIndicator setHidden:YES];
+}
+
 - (void)dealloc {
     [time release];
     [tilte release];
     [detail release];
+    [loadingIndicator release];
+    [mainView release];
     [super dealloc];
 }
 @end

@@ -9,6 +9,7 @@
 #import "Tab2MainViewController.h"
 #import "Tab2TableViewCell.h"
 #import "Tab2DetailViewController.h"
+#import "MBProgressHUD.h"
 
 #import "SBJson.h"
 
@@ -111,8 +112,11 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     tableView.separatorColor = [UIColor grayColor];
-    
-    return [self.annoucementArray count];
+    int count = [self.annoucementArray count];
+    if (count == 0) {
+        count = 1;
+    }
+    return count;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -137,11 +141,22 @@
 			}
 		}
 	}
-    NSDictionary *dict = [annoucementArray objectAtIndex:indexPath.row];
-    [cell.tilte setText:[dict objectForKey:@"title"]];
-    [cell.detail setText:[dict objectForKey:@"description"]];
-    [cell.time setText:[self dateDiff:[dict objectForKey:@"created_date"]]];
-    [cell.thumb setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/thumbnail/%@",[dict objectForKey:@"thumbnail"]]]]]];
+    int count = [self.annoucementArray count];
+    if (count == 0) {
+        // add HUD
+        [cell.mainView setHidden:YES];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = @"Getting Announcements";
+    }else{
+        [cell.mainView setHidden:NO];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        NSDictionary *dict = [annoucementArray objectAtIndex:indexPath.row];
+        [cell.tilte setText:[dict objectForKey:@"title"]];
+        [cell.detail setText:[dict objectForKey:@"description"]];
+        [cell.time setText:[self dateDiff:[dict objectForKey:@"created_date"]]];
+        [cell.thumb setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/thumbnail/%@",[dict objectForKey:@"thumbnail"]]]]]];
+    }
+    
     return cell;
 }
 

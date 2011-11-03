@@ -19,5 +19,10 @@
 @property (nonatomic, strong) IBOutlet UILabel *tilte;
 @property (nonatomic, strong) IBOutlet UILabel *detail;
 @property (nonatomic, strong) IBOutlet UIImageView *thumb;
+@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (retain, nonatomic) IBOutlet UIView *mainView;
+
+- (void)startLoading;
+- (void)stopLoading;
 
 @end
