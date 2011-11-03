@@ -18,6 +18,7 @@
 @interface Tab1MainViewController (Privated)
 - (void)showSubMenu;
 - (void)hideSubMenu;
+- (void)showOrHideSearchBar;
 @end
 
 @implementation Tab1MainViewController
@@ -236,7 +237,7 @@
 
 - (void)searchPoint
 {
-    
+    [self showOrHideSearchBar];
 }
 
 
@@ -328,7 +329,7 @@
 - (void)showSubMenu
 {
     UIView *_subMenuView = [self.view viewWithTag:66];
-    [UIView animateWithDuration:0.4 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         [_subMenuView setFrame:CGRectMake(0, 0, _subMenuView.frame.size.width, _subMenuView.frame.size.height)];
     } completion:^(BOOL finished){
         
@@ -338,7 +339,7 @@
 - (void)hideSubMenu
 {
     UIView *_subMenuView = [self.view viewWithTag:66];
-    [UIView animateWithDuration:0.4 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         [_subMenuView setFrame:CGRectMake(0, -40, _subMenuView.frame.size.width, _subMenuView.frame.size.height)];
     } completion:^(BOOL finished){
         
@@ -346,6 +347,9 @@
 }
 
 - (IBAction)cancleAdd:(UIButton*)sender {
+    
+    //#Tong Please remove the pin here
+    
     [self hideSubMenu];
 }
 
@@ -353,5 +357,29 @@
     Tab1AddViewController *addViewController = [[Tab1AddViewController alloc] initWithNibName:@"Tab1AddViewController" bundle:nil];
     [self.navigationController pushViewController:addViewController animated:YES];
     [addViewController release];
+    [self hideSubMenu];
 }
+
+- (void)showOrHideSearchBar
+{
+    UIView *_searchBar = [self.view viewWithTag:77];
+    NSInteger currentY = _searchBar.frame.origin.y;
+    if (currentY == -44) {
+        [UIView animateWithDuration:0.3 animations:^{
+            [_searchBar setFrame:CGRectMake(0, 0, _searchBar.frame.size.width, _searchBar.frame.size.height)];
+        } completion:^(BOOL finished){
+            
+        }];
+    }else{
+        [_searchBar resignFirstResponder];
+        [UIView animateWithDuration:0.3 animations:^{
+            [_searchBar setFrame:CGRectMake(0, -44, _searchBar.frame.size.width, _searchBar.frame.size.height)];
+        } completion:^(BOOL finished){
+            
+        }];
+    }
+    
+}
+
+
 @end

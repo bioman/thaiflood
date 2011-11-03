@@ -13,9 +13,6 @@
 
 @implementation Tab2DetailViewController
 @synthesize annoucementDetail;
-@synthesize dateLabel;
-@synthesize timeLabel;
-@synthesize fromLabel;
 @synthesize detailTextView;
 @synthesize dateDiffLabel;
 
@@ -71,9 +68,6 @@
 
 - (void)viewDidUnload
 {
-    [self setDateLabel:nil];
-    [self setTimeLabel:nil];
-    [self setFromLabel:nil];
     [self setDetailTextView:nil];
     [self setDateDiffLabel:nil];
     [self setAnnoucementDetail:nil];
@@ -83,9 +77,6 @@
 }
 
 - (void)dealloc {
-    [dateLabel release];
-    [timeLabel release];
-    [fromLabel release];
     [detailTextView release];
     [dateDiffLabel release];
     [annoucementDetail release];
@@ -162,9 +153,6 @@
     
     //set value
     [self.dateDiffLabel setText:[self dateDiff:[annoucementDetail objectForKey:@"created_date"]]];
-    [self.dateLabel setText:[self getDateFrom:[annoucementDetail objectForKey:@"created_date"]]];
-    [self.timeLabel setText:[self getTimeFrom:[annoucementDetail objectForKey:@"created_date"]]];
-    [self.fromLabel setText:[NSString stringWithFormat:@"From : %@",[annoucementDetail objectForKey:@"annouce_from"]]];
     [self.detailTextView setText:[annoucementDetail objectForKey:@"description"]];
     
     

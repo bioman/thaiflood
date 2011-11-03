@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface Tab1AddViewController : UIViewController
+- (IBAction)dismissKeyboard:(id)sender;
 
 @end
