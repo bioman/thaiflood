@@ -16,9 +16,6 @@
 }
 
 @property (nonatomic, retain) NSDictionary *annoucementDetail;
-@property (retain, nonatomic) IBOutlet UILabel *dateLabel;
-@property (retain, nonatomic) IBOutlet UILabel *timeLabel;
-@property (retain, nonatomic) IBOutlet UILabel *fromLabel;
 @property (retain, nonatomic) IBOutlet UITextView *detailTextView;
 @property (retain, nonatomic) IBOutlet UILabel *dateDiffLabel;
 
