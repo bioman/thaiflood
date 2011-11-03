@@ -111,6 +111,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     tableView.separatorColor = [UIColor grayColor];
+    
     return [self.annoucementArray count];
 }
 
@@ -131,15 +132,16 @@
 			if ([currentObject isKindOfClass:[UITableViewCell class]]){
 				cell =  (Tab2TableViewCell *) currentObject;
                 
-                NSDictionary *dict = [annoucementArray objectAtIndex:indexPath.row];
-                [cell.tilte setText:[dict objectForKey:@"title"]];
-                [cell.detail setText:[dict objectForKey:@"description"]];
-                [cell.time setText:[self dateDiff:[dict objectForKey:@"created_date"]]];
+                
 				break;
 			}
 		}
 	}
-    
+    NSDictionary *dict = [annoucementArray objectAtIndex:indexPath.row];
+    [cell.tilte setText:[dict objectForKey:@"title"]];
+    [cell.detail setText:[dict objectForKey:@"description"]];
+    [cell.time setText:[self dateDiff:[dict objectForKey:@"created_date"]]];
+    [cell.thumb setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/thumbnail/%@",[dict objectForKey:@"thumbnail"]]]]]];
     return cell;
 }
 

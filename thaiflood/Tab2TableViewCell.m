@@ -9,7 +9,7 @@
 #import "Tab2TableViewCell.h"
 
 @implementation Tab2TableViewCell
-@synthesize time, tilte, detail;
+@synthesize time, tilte, detail, thumb;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

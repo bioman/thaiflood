@@ -9,6 +9,7 @@
 #import "Tab1AddViewController.h"
 
 @implementation Tab1AddViewController
+@synthesize dateTimeLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,6 +58,7 @@
 
 - (void)viewDidUnload
 {
+    [self setDateTimeLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -79,5 +81,9 @@
     UIView *_text2 = [self.view viewWithTag:22];
     [_text resignFirstResponder];
     [_text2 resignFirstResponder];
+}
+- (void)dealloc {
+    [dateTimeLabel release];
+    [super dealloc];
 }
 @end

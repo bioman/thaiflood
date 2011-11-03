@@ -15,6 +15,7 @@
 @synthesize annoucementDetail;
 @synthesize detailTextView;
 @synthesize dateDiffLabel;
+@synthesize titleLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -153,6 +154,7 @@
     
     //set value
     [self.dateDiffLabel setText:[self dateDiff:[annoucementDetail objectForKey:@"created_date"]]];
+    [self.titleLabel setText:[annoucementDetail objectForKey:@"title"]];
     [self.detailTextView setText:[annoucementDetail objectForKey:@"description"]];
     
     

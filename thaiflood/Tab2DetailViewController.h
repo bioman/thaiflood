@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSDictionary *annoucementDetail;
 @property (retain, nonatomic) IBOutlet UITextView *detailTextView;
 @property (retain, nonatomic) IBOutlet UILabel *dateDiffLabel;
+@property (retain, nonatomic) IBOutlet UILabel *titleLabel;
 
 - (IBAction)shareFacebook:(id)sender;
 - (IBAction)shareTwitter:(id)sender;

@@ -10,5 +10,6 @@
 
 @interface Tab1AddViewController : UIViewController
 - (IBAction)dismissKeyboard:(id)sender;
+@property (retain, nonatomic) IBOutlet UILabel *dateTimeLabel;
 
 @end

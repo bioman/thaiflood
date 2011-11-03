@@ -18,5 +18,6 @@
 @property (nonatomic, strong) IBOutlet UILabel *time;
 @property (nonatomic, strong) IBOutlet UILabel *tilte;
 @property (nonatomic, strong) IBOutlet UILabel *detail;
+@property (nonatomic, strong) IBOutlet UIImageView *thumb;
 
 @end
