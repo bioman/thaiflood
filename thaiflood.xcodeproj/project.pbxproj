@@ -59,7 +59,6 @@
 		4516F7DB145EAFA800699725 /* text_other@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4516F7D1145EAFA800699725 /* text_other@2x.png */; };
 		4516F7DC145EAFA800699725 /* text_police.png in Resources */ = {isa = PBXBuildFile; fileRef = 4516F7D2145EAFA800699725 /* text_police.png */; };
 		4516F7DD145EAFA800699725 /* text_police@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4516F7D3145EAFA800699725 /* text_police@2x.png */; };
-		4516F7E2145EB00F00699725 /* Tab4DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4516F7E0145EB00F00699725 /* Tab4DetailViewController.xib */; };
 		4516F7EB145EC7BD00699725 /* Tab3DetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4516F7EA145EC7BD00699725 /* Tab3DetailTableViewCell.xib */; };
 		4516F7F2145EC95D00699725 /* Tab3DetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4516F7F1145EC95D00699725 /* Tab3DetailTableViewCell.m */; };
 		453BB0F514611F500030F83F /* AnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453BB0F214611F500030F83F /* AnnotationView.m */; };
@@ -303,7 +302,6 @@
 		4516F7D1145EAFA800699725 /* text_other@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text_other@2x.png"; sourceTree = "<group>"; };
 		4516F7D2145EAFA800699725 /* text_police.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = text_police.png; sourceTree = "<group>"; };
 		4516F7D3145EAFA800699725 /* text_police@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text_police@2x.png"; sourceTree = "<group>"; };
-		4516F7E0145EB00F00699725 /* Tab4DetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tab4DetailViewController.xib; sourceTree = "<group>"; };
 		4516F7EA145EC7BD00699725 /* Tab3DetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tab3DetailTableViewCell.xib; sourceTree = "<group>"; };
 		4516F7F0145EC95D00699725 /* Tab3DetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab3DetailTableViewCell.h; sourceTree = "<group>"; };
 		4516F7F1145EC95D00699725 /* Tab3DetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab3DetailTableViewCell.m; sourceTree = "<group>"; };
@@ -633,7 +631,6 @@
 				453CD44D145DC8FE00F29612 /* Tab3MainViewController.xib */,
 				4516F76C145E3B9F00699725 /* Tab3DetailViewController.xib */,
 				453CD457145DC95B00F29612 /* Tab4MainViewController.xib */,
-				4516F7E0145EB00F00699725 /* Tab4DetailViewController.xib */,
 				4516F773145E3DBD00699725 /* Tab2TableViewCell.xib */,
 				4516F7EA145EC7BD00699725 /* Tab3DetailTableViewCell.xib */,
 			);
@@ -1165,7 +1162,6 @@
 				4516F7DB145EAFA800699725 /* text_other@2x.png in Resources */,
 				4516F7DC145EAFA800699725 /* text_police.png in Resources */,
 				4516F7DD145EAFA800699725 /* text_police@2x.png in Resources */,
-				4516F7E2145EB00F00699725 /* Tab4DetailViewController.xib in Resources */,
 				4516F7EB145EC7BD00699725 /* Tab3DetailTableViewCell.xib in Resources */,
 				45F8F833145F96E900E4C9D9 /* button_call.png in Resources */,
 				45F8F834145F96E900E4C9D9 /* button_call@2x.png in Resources */,
