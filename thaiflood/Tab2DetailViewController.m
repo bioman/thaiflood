@@ -170,7 +170,7 @@
     [self.request setDelegate:nil];
     [self.request cancel];
     [self.request release];
-    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/thumbnail/%@",[annoucementDetail objectForKey:@"picture"]]];
+    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[annoucementDetail objectForKey:@"picture"]]];
     self.request = [ASIHTTPRequest requestWithURL:_url];
     [self.request setDelegate:self];
     [self.request startAsynchronous];

@@ -154,7 +154,7 @@
         [cell.tilte setText:[dict objectForKey:@"title"]];
         [cell.detail setText:[dict objectForKey:@"description"]];
         [cell.time setText:[self dateDiff:[dict objectForKey:@"created_date"]]];
-        [cell thumbnailFromURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/thumbnail/%@",[dict objectForKey:@"thumbnail"]]]];
+        [cell thumbnailFromURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[dict objectForKey:@"thumbnail"]]]];
     }
     
     return cell;

@@ -8,6 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "Tab4MainViewController.h"
+#import "Social.h"
 
 @implementation Tab4MainViewController
 
@@ -59,6 +60,53 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (IBAction)facebookSignInTap:(id)sender {
+    [[Social sharedSocial] logInFacebook:self];
+}
+
+- (IBAction)twitterSignInTap:(id)sender {
+    
+}
+
+- (void)facebookDidFinishLogIn
+{
+    NSDictionary *_social = [[[Social sharedSocial] socialPlist] objectForKey:@"Facebook"];
+    UIView *_logoFB = [self.view viewWithTag:41];
+    [UIView animateWithDuration:0.3 animations:^{
+        [_logoFB setAlpha:0.0];
+        [_logoFB setHidden:YES];
+    } completion:^(BOOL finished){
+        UIView *_frameFB = [self.view viewWithTag:51];
+        UIImageView *_picFB = (UIImageView*)[self.view viewWithTag:31];
+        [_picFB setImage:[UIImage imageWithContentsOfFile:[_social objectForKey:@"picture"]]];
+        [_frameFB setAlpha:0.0];
+        [_frameFB setHidden:NO];
+        [_picFB setAlpha:0.0];
+        [_picFB setHidden:NO];
+        [UIView animateWithDuration:0.3 animations:^{
+            [_frameFB setAlpha:1.0];
+            [_picFB setAlpha:1.0];
+        } completion:^(BOOL finished){
+            
+        }];
+    }];
+}
+
+- (void)facebookDidFinishLogOut
+{
+    
+}
+
+- (void)twitterDidFinishLogIn
+{
+    
+}
+
+- (void)twitterDidFinishLogOut
+{
+    
 }
 
 @end
