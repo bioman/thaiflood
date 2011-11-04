@@ -8,6 +8,7 @@
 
 #import "thaifloodAppDelegate.h"
 #import "SCAppUtils.h"
+#import "Social.h"
 
 @implementation thaifloodAppDelegate
 
@@ -102,5 +103,12 @@
 {
 }
 */
+
+#pragma mark - Facebook
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [[[Social sharedSocial] facebook] handleOpenURL:url]; 
+}
 
 @end
