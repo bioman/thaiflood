@@ -3,7 +3,7 @@
 //  thaiflood
 //
 //  Created by Sunchai Pitakchonlasup on 10/30/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//  Copyright 2011 App. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
