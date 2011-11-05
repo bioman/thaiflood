@@ -38,19 +38,10 @@ static Social *_instance;
             
             _instance.facebook = [[Facebook alloc] initWithAppId:@"270426946332947" andDelegate:_instance];
             
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            if ([defaults objectForKey:@"FBAccessTokenKey"] 
-                && [defaults objectForKey:@"FBExpirationDateKey"]) {
-                _instance.facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-                _instance.facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
-            }
-            
-            if (![_instance.facebook isSessionValid]) {
-                [_instance.facebook authorize:nil];
-            }
-            
             NSString *databasePlistPath = [NSString stringWithFormat: @"%@/SocialData.plist", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0]];
-            if (![[NSFileManager defaultManager] fileExistsAtPath: databasePlistPath]){                 NSString *filePath = [[NSBundle mainBundle] pathForResource:@"SocialData" ofType:@"plist"];
+            if (![[NSFileManager defaultManager] fileExistsAtPath: databasePlistPath]){
+                NSLog(@"NO Plist");
+                NSString *filePath = [[NSBundle mainBundle] pathForResource:@"SocialData" ofType:@"plist"];
                 NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
                 NSString *documentsDir = [paths objectAtIndex:0];
@@ -59,9 +50,10 @@ static Social *_instance;
                 _instance.socialPlist = plist;
                 [plist release];
             }else{ //database.plist is available.
+                NSLog(@"YES Plist");
                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                 NSString *documentsDirectory = [paths objectAtIndex:0];
-                NSString *path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithString:@"database.plist"]];
+                NSString *path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithString:@"SocialData.plist"]];
                 NSMutableDictionary *plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
                 _instance.socialPlist = plist;
                 [plist release];
@@ -132,7 +124,7 @@ static Social *_instance;
 
 - (BOOL) isDidLogInFacebook
 {
-    if (![_instance.facebook isSessionValid]) {
+    if ([[[_instance.socialPlist objectForKey:@"Facebook"] objectForKey:@"name"] isEqualToString:@" "]) {
         return NO;
     }else{
         return YES;
@@ -168,8 +160,8 @@ static Social *_instance;
     }
     
     NSMutableDictionary *_facebook = [[NSMutableDictionary alloc] init];
-    [_facebook setObject:@"" forKey:@"name"];
-    [_facebook setObject:@"" forKey:@"picture"];
+    [_facebook setObject:@" " forKey:@"name"];
+    [_facebook setObject:@" " forKey:@"picture"];
     [_instance.socialPlist setObject:_facebook forKey:@"Facebook"];
     [_facebook release];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);

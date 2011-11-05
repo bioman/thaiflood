@@ -5,16 +5,16 @@
 	<key>Facebook</key>
 	<dict>
 		<key>name</key>
-		<string></string>
+		<string> </string>
 		<key>picture</key>
-		<string></string>
+		<string> </string>
 	</dict>
 	<key>Twitter</key>
 	<dict>
 		<key>name</key>
-		<string></string>
+		<string> </string>
 		<key>picture</key>
-		<string></string>
+		<string> </string>
 	</dict>
 </dict>
 </plist>

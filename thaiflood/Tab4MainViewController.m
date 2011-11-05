@@ -3,12 +3,31 @@
 //  thaiflood
 //
 //  Created by Sunchai Pitakchonlasup on 10/31/54 BE.
-//  Copyright (c) 2554 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2554 Appsphere Group Co.,Ltd. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>
 #import "Tab4MainViewController.h"
 #import "Social.h"
+
+#define TAG_FACEBOOK_SIGN_IN    801
+#define TAG_TWITTER_SIGN_IN     802
+#define TAG_FACEBOOK_SIGN_OUT   803
+#define TAG_TWITTER_SIGN_OUT    804
+#define TAG_FACEBOOK_LOADING    901
+#define TAG_TWITTER_LOADING     902
+
+#define TAG_FACEBOOK_TEXT       301
+#define TAG_TWITTER_TEXT        302
+#define TAG_FACEBOOK_NAME       303
+#define TAG_TWITTER_NAME        304
+
+#define TAG_FACEBOOK_ICON       41
+#define TAG_TWITTER_ICON        42
+#define TAG_FACEBOOK_BORDER     51
+#define TAG_TWITTER_BORDER      52
+#define TAG_FACEBOOK_PICTURE    31
+#define TAG_TWITTER_PICTURE     32
 
 @implementation Tab4MainViewController
 
@@ -47,6 +66,36 @@
     newShadow.frame = CGRectMake(0,navigationBarBottom, self.view.frame.size.width, 3);
     newShadow.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
     [self.view.layer addSublayer:newShadow];
+    
+    if ([[Social sharedSocial] isDidLogInFacebook]) {
+        NSLog(@"if ([[Social sharedSocial] isDidLogInFacebook])");
+        
+        NSDictionary *_social = [[[Social sharedSocial] socialPlist] objectForKey:@"Facebook"];
+        NSString *_name = [_social objectForKey:@"name"];
+        NSLog(@"name:%@",_name);
+        UIImage *_picture = [UIImage imageWithContentsOfFile:[_social objectForKey:@"picture"]];
+        
+        UIView *_signinFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_IN];
+        [_signinFB setHidden:YES];
+        UIView *_signoutFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_OUT];
+        [_signoutFB setHidden:NO];
+        UIView *_logoFB = [self.view viewWithTag:TAG_FACEBOOK_ICON];
+        [_logoFB setAlpha:0.0];
+        [_logoFB setHidden:YES];
+        UIView *_frameFB = [self.view viewWithTag:TAG_FACEBOOK_BORDER];
+        UIImageView *_picFB = (UIImageView*)[self.view viewWithTag:TAG_FACEBOOK_PICTURE];
+        [_picFB setImage:_picture];
+        [_frameFB setAlpha:1.0];
+        [_frameFB setHidden:NO];
+        [_picFB setAlpha:1.0];
+        [_picFB setHidden:NO];
+        UIView *_textFB = [self.view viewWithTag:TAG_FACEBOOK_TEXT];
+        [_textFB setFrame:CGRectMake(65, 47, 129, 9)];
+        UILabel *_nameFB = (UILabel*)[self.view viewWithTag:TAG_FACEBOOK_NAME];
+        [_nameFB setText:_name];
+        [_nameFB setHidden:NO];
+        [_nameFB setAlpha:1.0];
+    }
 }
 
 - (void)viewDidUnload
@@ -63,23 +112,32 @@
 }
 
 - (IBAction)facebookSignInTap:(id)sender {
+    UIActivityIndicatorView *_loadingFB = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_FACEBOOK_LOADING];
+    UIView *_signinFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_IN];
+    [_signinFB setHidden:YES];
+    [_loadingFB setHidden:NO];
+    [_loadingFB startAnimating];
     [[Social sharedSocial] logInFacebook:self];
-}
-
-- (IBAction)twitterSignInTap:(id)sender {
-    
 }
 
 - (void)facebookDidFinishLogIn
 {
+    NSLog(@"facebookDidFinishLogIn");
+    
+    UIActivityIndicatorView *_loadingFB = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_FACEBOOK_LOADING];
+    [_loadingFB stopAnimating];
+    [_loadingFB setHidden:YES];
+    UIView *_signoutFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_OUT];
+    [_signoutFB setHidden:NO];
+    
     NSDictionary *_social = [[[Social sharedSocial] socialPlist] objectForKey:@"Facebook"];
-    UIView *_logoFB = [self.view viewWithTag:41];
+    UIView *_logoFB = [self.view viewWithTag:TAG_FACEBOOK_ICON];
     [UIView animateWithDuration:0.3 animations:^{
         [_logoFB setAlpha:0.0];
-        [_logoFB setHidden:YES];
     } completion:^(BOOL finished){
-        UIView *_frameFB = [self.view viewWithTag:51];
-        UIImageView *_picFB = (UIImageView*)[self.view viewWithTag:31];
+        [_logoFB setHidden:YES];
+        UIView *_frameFB = [self.view viewWithTag:TAG_FACEBOOK_BORDER];
+        UIImageView *_picFB = (UIImageView*)[self.view viewWithTag:TAG_FACEBOOK_PICTURE];
         [_picFB setImage:[UIImage imageWithContentsOfFile:[_social objectForKey:@"picture"]]];
         [_frameFB setAlpha:0.0];
         [_frameFB setHidden:NO];
@@ -89,19 +147,83 @@
             [_frameFB setAlpha:1.0];
             [_picFB setAlpha:1.0];
         } completion:^(BOOL finished){
-            
+            UIView *_textFB = [self.view viewWithTag:TAG_FACEBOOK_TEXT];
+            UILabel *_nameFB = (UILabel*)[self.view viewWithTag:TAG_FACEBOOK_NAME];
+            [_nameFB setText:[_social objectForKey:@"name"]];
+            [_nameFB setHidden:NO];
+            [UIView animateWithDuration:0.3 animations:^{
+                [_nameFB setAlpha:1.0];
+                [_textFB setFrame:CGRectMake(65, 47, 129, 9)];
+            } completion:^(BOOL finished){
+                
+            }];
         }];
     }];
 }
 
+- (IBAction)facebookSignOutTap:(id)sender {
+    UIActivityIndicatorView *_loadingFB = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_FACEBOOK_LOADING];
+    UIView *_signoutFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_OUT];
+    [_signoutFB setHidden:YES];
+    [_loadingFB setHidden:NO];
+    [_loadingFB startAnimating];
+    [[Social sharedSocial] logOutFacebook:self];
+}
+
 - (void)facebookDidFinishLogOut
 {
+    UIActivityIndicatorView *_loadingFB = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_FACEBOOK_LOADING];
+    [_loadingFB stopAnimating];
+    [_loadingFB setHidden:YES];
+    UIView *_signinFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_IN];
+    [_signinFB setHidden:NO];
+    
+    UIView *_textFB = [self.view viewWithTag:TAG_FACEBOOK_TEXT];
+    UILabel *_nameFB = (UILabel*)[self.view viewWithTag:TAG_FACEBOOK_NAME];
+    
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        [_nameFB setAlpha:0.0];
+        [_textFB setFrame:CGRectMake(65, 55, 129, 9)];
+        
+        
+    } completion:^(BOOL finished){
+        [_nameFB setText:@""];
+        [_nameFB setHidden:YES];
+        
+        
+        UIView *_frameFB = [self.view viewWithTag:TAG_FACEBOOK_BORDER];
+        UIImageView *_picFB = (UIImageView*)[self.view viewWithTag:TAG_FACEBOOK_PICTURE];
+        [UIView animateWithDuration:0.3 animations:^{
+            [_frameFB setAlpha:0.0];
+            [_picFB setAlpha:0.0];
+        } completion:^(BOOL finished){
+            [_frameFB setHidden:YES];
+            [_picFB setHidden:YES];
+            
+            UIView *_logoFB = [self.view viewWithTag:TAG_FACEBOOK_ICON];
+            [_logoFB setHidden:NO];
+            [UIView animateWithDuration:0.3 animations:^{
+                [_logoFB setAlpha:1.0];
+            } completion:^(BOOL finished){
+                
+            }];
+        }];
+    }];
+}
+
+#pragma mark - Twitter
+
+- (IBAction)twitterSignInTap:(id)sender {
     
 }
 
 - (void)twitterDidFinishLogIn
 {
     
+}
+
+- (IBAction)twitterSignOutTap:(id)sender {
 }
 
 - (void)twitterDidFinishLogOut

@@ -14,5 +14,7 @@
 
 - (IBAction)facebookSignInTap:(id)sender;
 - (IBAction)twitterSignInTap:(id)sender;
+- (IBAction)facebookSignOutTap:(id)sender;
+- (IBAction)twitterSignOutTap:(id)sender;
 
 @end
