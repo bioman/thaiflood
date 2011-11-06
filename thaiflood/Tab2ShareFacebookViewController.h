@@ -10,4 +10,5 @@
 
 @interface Tab2ShareFacebookViewController : UIViewController
 
+- (IBAction)dismissKeyboard:(id)sender;
 @end
