@@ -3,8 +3,9 @@
 //  thaiflood
 //
 //  Created by Sunchai Pitakchonlasup on 10/30/11.
-//  Copyright 2011 app yoez. All rights reserved.
-//
+//  Copyright 2011 Appsphere Group Co.,Ltd. All rights reserved.
+// https://github.com/mattgemmell/MGTwitterEngine
+// https://github.com/bengottlieb/Twitter-OAuth-iPhone
 
 #import "thaifloodAppDelegate.h"
 #import "SCAppUtils.h"
