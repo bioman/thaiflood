@@ -18,6 +18,8 @@
 #define FEED_DESCRIPTION             @"description"
 #define FEED_MESSAGE                 @"message"
 
+#import <Twitter/Twitter.h>
+#import <Accounts/Accounts.h>
 #import "Social.h"
 
 static Social *_instance;
@@ -58,6 +60,7 @@ static Social *_instance;
                 _instance.socialPlist = plist;
                 [plist release];
             }
+            
         }
     }
     return _instance;
@@ -170,7 +173,7 @@ static Social *_instance;
     [_instance.socialPlist writeToFile:fullPath atomically:YES];
     
     [tab4Delegate facebookDidFinishLogOut];
-    [tab4Delegate release];
+    //[tab4Delegate release];
 }
 
 - (void) shareFacebookFloodTitle:(NSString*)_title detail:(NSString*)_detail linkURL:(NSString*)_link imageURL:(NSString*)_image caption:(NSString*)_caption 
@@ -230,12 +233,93 @@ static Social *_instance;
         [_instance.socialPlist writeToFile:fullPath atomically:YES];
         
         [tab4Delegate facebookDidFinishLogIn];
-        [tab4Delegate release];
+        //[tab4Delegate release];
     }
 }
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
     NSLog(@"%@", [error localizedDescription]);
+}
+
+#pragma mark - Twitter
+
+- (void) logInTwitter:(id<Social2Tab4Delegate>)delegate
+{
+    NSLog(@"logInTwitter");
+    if ([TWTweetComposeViewController canSendTweet]) {
+        ACAccountStore *accountStore = [[ACAccountStore alloc] init];
+        ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+        [accountStore requestAccessToAccountsWithType:accountType withCompletionHandler:^(BOOL granted, NSError *error) {
+            if(granted) {
+                @synchronized(self) {
+                    NSArray *accountsArray = [accountStore accountsWithAccountType:accountType];
+                    if ([accountsArray count] > 0) {
+                        ACAccount *twitterAccount = [accountsArray objectAtIndex:0];
+                        TWRequest *postRequest = [[TWRequest alloc] initWithURL:[NSURL URLWithString:@"https://api.twitter.com/1/account/verify_credentials.json"] parameters:nil requestMethod:TWRequestMethodGET];
+                        [postRequest setAccount:twitterAccount];
+                        [postRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+                            NSString *output = [NSString stringWithFormat:@"HTTP response status: %i", [urlResponse statusCode]];
+                            NSLog(@"%@ %@", output, [NSString stringWithUTF8String:[responseData bytes]]);
+                            if ([responseData length] != 0) {
+                                NSString *_json = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding] autorelease];
+                                //[NSString stringWithUTF8String:[responseData bytes]];
+                                NSLog(@"_json %@", _json);
+                                NSDictionary *_twitterUser = (NSDictionary*)[_json JSONValue];
+                                NSLog(@"name %@ picture %@", [_twitterUser objectForKey:@"name"], [_twitterUser objectForKey:@"profile_image_url"]);
+                                NSString *_picString = [NSString stringWithString:[_twitterUser objectForKey:@"profile_image_url"]];
+                                NSLog(@"_picString %@", _picString);
+                                UIImage *_pic = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_picString]]];
+                                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
+                                NSString *documentsDir = [paths objectAtIndex:0];
+                                NSString *fullPath = [documentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"twpic.png"]]; 
+                                [UIImagePNGRepresentation(_pic) writeToFile:fullPath atomically:YES];
+                                
+                                NSMutableDictionary *_twitter = [[NSMutableDictionary alloc] init];
+                                [_twitter setObject:[_twitterUser objectForKey:@"name"] forKey:@"name"];
+                                [_twitter setObject:fullPath forKey:@"picture"];
+                                [_instance.socialPlist setObject:_twitter forKey:@"Twitter"];
+                                [_twitter release];
+                                fullPath = [documentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"SocialData.plist"]]; 
+                                [_instance.socialPlist writeToFile:fullPath atomically:YES];
+                                [delegate twitterDidFinishLogIn];
+                                [postRequest release];
+                            }else{
+                                //responseData null
+                                NSLog(@"Twitter log in not successful.");
+                                [postRequest release];
+                            }
+                            
+                        }];
+                    }
+                }
+            }
+        }];
+    }
+}
+
+- (void) logOutTwitter:(id<Social2Tab4Delegate>)delegate
+{
+    NSLog(@"logOutTwitter");
+    NSMutableDictionary *_twitter = [[NSMutableDictionary alloc] init];
+    [_twitter setObject:@" " forKey:@"name"];
+    [_twitter setObject:@" " forKey:@"picture"];
+    [_instance.socialPlist setObject:_twitter forKey:@"Twitter"];
+    [_twitter release];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
+    NSString *documentsDir = [paths objectAtIndex:0];
+    NSString *fullPath = [documentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"SocialData.plist"]]; 
+    [_instance.socialPlist writeToFile:fullPath atomically:YES];
+    
+    [delegate twitterDidFinishLogOut];
+}
+
+- (BOOL) isDidLogInTwitter
+{
+    if ([[[_instance.socialPlist objectForKey:@"Twitter"] objectForKey:@"name"] isEqualToString:@" "]) {
+        return NO;
+    }else{
+        return YES;
+    }
 }
 
 @end

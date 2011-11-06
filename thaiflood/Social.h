@@ -27,4 +27,8 @@
 - (BOOL) isDidLogInFacebook;
 - (void) shareFacebookFloodTitle:(NSString*)_title detail:(NSString*)_detail linkURL:(NSString*)_link imageURL:(NSString*)_image caption:(NSString*)_caption;
 
+- (void) logInTwitter:(id<Social2Tab4Delegate>)delegate;
+- (void) logOutTwitter:(id<Social2Tab4Delegate>)delegate;
+- (BOOL) isDidLogInTwitter;
+
 @end

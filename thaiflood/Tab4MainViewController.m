@@ -72,7 +72,7 @@
         
         NSDictionary *_social = [[[Social sharedSocial] socialPlist] objectForKey:@"Facebook"];
         NSString *_name = [_social objectForKey:@"name"];
-        NSLog(@"name:%@",_name);
+        NSLog(@"facebook name:%@",_name);
         UIImage *_picture = [UIImage imageWithContentsOfFile:[_social objectForKey:@"picture"]];
         
         UIView *_signinFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_IN];
@@ -96,6 +96,34 @@
         [_nameFB setHidden:NO];
         [_nameFB setAlpha:1.0];
     }
+    
+    if ([[Social sharedSocial] isDidLogInTwitter]) {
+        NSDictionary *_social = [[[Social sharedSocial] socialPlist] objectForKey:@"Twitter"];
+        NSString *_name = [_social objectForKey:@"name"];
+        NSLog(@"twitter name:%@",_name);
+        UIImage *_picture = [UIImage imageWithContentsOfFile:[_social objectForKey:@"picture"]];
+        
+        UIView *_signinTW = [self.view viewWithTag:TAG_TWITTER_SIGN_IN];
+        [_signinTW setHidden:YES];
+        UIView *_signoutTW = [self.view viewWithTag:TAG_TWITTER_SIGN_OUT];
+        [_signoutTW setHidden:NO];
+        UIView *_logoTW = [self.view viewWithTag:TAG_TWITTER_ICON];
+        [_logoTW setAlpha:0.0];
+        [_logoTW setHidden:YES];
+        UIView *_frameTW = [self.view viewWithTag:TAG_TWITTER_BORDER];
+        UIImageView *_picTW = (UIImageView*)[self.view viewWithTag:TAG_TWITTER_PICTURE];
+        [_picTW setImage:_picture];
+        [_frameTW setAlpha:1.0];
+        [_frameTW setHidden:NO];
+        [_picTW setAlpha:1.0];
+        [_picTW setHidden:NO];
+        UIView *_textTW = [self.view viewWithTag:TAG_TWITTER_TEXT];
+        [_textTW setFrame:CGRectMake(65, 103, 109, 9)];
+        UILabel *_nameTW = (UILabel*)[self.view viewWithTag:TAG_TWITTER_NAME];
+        [_nameTW setText:_name];
+        [_nameTW setHidden:NO];
+        [_nameTW setAlpha:1.0];
+    }
 }
 
 - (void)viewDidUnload
@@ -112,6 +140,7 @@
 }
 
 - (IBAction)facebookSignInTap:(id)sender {
+    NSLog(@"facebookSignInTap");
     UIActivityIndicatorView *_loadingFB = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_FACEBOOK_LOADING];
     UIView *_signinFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_IN];
     [_signinFB setHidden:YES];
@@ -162,6 +191,7 @@
 }
 
 - (IBAction)facebookSignOutTap:(id)sender {
+    NSLog(@"facebookSignOutTap");
     UIActivityIndicatorView *_loadingFB = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_FACEBOOK_LOADING];
     UIView *_signoutFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_OUT];
     [_signoutFB setHidden:YES];
@@ -172,6 +202,7 @@
 
 - (void)facebookDidFinishLogOut
 {
+    NSLog(@"facebookDidFinishLogOut");
     UIActivityIndicatorView *_loadingFB = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_FACEBOOK_LOADING];
     [_loadingFB stopAnimating];
     [_loadingFB setHidden:YES];
@@ -215,20 +246,108 @@
 #pragma mark - Twitter
 
 - (IBAction)twitterSignInTap:(id)sender {
-    
+    NSLog(@"twitterSignInTap");
+    UIActivityIndicatorView *_loadingTW = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_TWITTER_LOADING];
+    UIView *_signinTW = [self.view viewWithTag:TAG_TWITTER_SIGN_IN];
+    [_signinTW setHidden:YES];
+    [_loadingTW setHidden:NO];
+    [_loadingTW startAnimating];
+    [[Social sharedSocial] logInTwitter:self];
 }
 
 - (void)twitterDidFinishLogIn
 {
+    NSLog(@"twitterDidFinishLogIn");
     
+    UIActivityIndicatorView *_loadingTW = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_TWITTER_LOADING];
+    [_loadingTW stopAnimating];
+    [_loadingTW setHidden:YES];
+    UIView *_signoutTW = [self.view viewWithTag:TAG_TWITTER_SIGN_OUT];
+    [_signoutTW setHidden:NO];
+    
+    NSDictionary *_social = [[[Social sharedSocial] socialPlist] objectForKey:@"Twitter"];
+    UIView *_logoTW = [self.view viewWithTag:TAG_TWITTER_ICON];
+    [UIView animateWithDuration:0.3 animations:^{
+        [_logoTW setAlpha:0.0];
+    } completion:^(BOOL finished){
+        [_logoTW setHidden:YES];
+        UIView *_frameTW = [self.view viewWithTag:TAG_TWITTER_BORDER];
+        UIImageView *_picTW = (UIImageView*)[self.view viewWithTag:TAG_TWITTER_PICTURE];
+        [_picTW setImage:[UIImage imageWithContentsOfFile:[_social objectForKey:@"picture"]]];
+        [_frameTW setAlpha:0.0];
+        [_frameTW setHidden:NO];
+        [_picTW setAlpha:0.0];
+        [_picTW setHidden:NO];
+        [UIView animateWithDuration:0.3 animations:^{
+            [_frameTW setAlpha:1.0];
+            [_picTW setAlpha:1.0];
+        } completion:^(BOOL finished){
+            UIView *_textTW = [self.view viewWithTag:TAG_TWITTER_TEXT];
+            UILabel *_nameTW = (UILabel*)[self.view viewWithTag:TAG_TWITTER_NAME];
+            [_nameTW setText:[_social objectForKey:@"name"]];
+            [_nameTW setHidden:NO];
+            [UIView animateWithDuration:0.3 animations:^{
+                [_nameTW setAlpha:1.0];
+                [_textTW setFrame:CGRectMake(65, 103, 109, 9)];
+            } completion:^(BOOL finished){
+                
+            }];
+        }];
+    }];
 }
 
-- (IBAction)twitterSignOutTap:(id)sender {
+- (IBAction)twitterSignOutTap:(id)sender 
+{
+    NSLog(@"twitterSignOutTap");
+    UIActivityIndicatorView *_loadingTW = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_TWITTER_LOADING];
+    UIView *_signoutTW = [self.view viewWithTag:TAG_TWITTER_SIGN_OUT];
+    [_signoutTW setHidden:YES];
+    [_loadingTW setHidden:NO];
+    [_loadingTW startAnimating];
+    [[Social sharedSocial] logOutTwitter:self];
 }
 
 - (void)twitterDidFinishLogOut
 {
+    NSLog(@"twitterDidFinishLogOut");
+    UIActivityIndicatorView *_loadingTW = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_TWITTER_LOADING];
+    [_loadingTW stopAnimating];
+    [_loadingTW setHidden:YES];
+    UIView *_signinTW = [self.view viewWithTag:TAG_TWITTER_SIGN_IN];
+    [_signinTW setHidden:NO];
     
+    UIView *_textTW = [self.view viewWithTag:TAG_TWITTER_TEXT];
+    UILabel *_nameTW = (UILabel*)[self.view viewWithTag:TAG_TWITTER_NAME];
+    
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        [_nameTW setAlpha:0.0];
+        [_textTW setFrame:CGRectMake(65, 111, 109, 9)];
+        
+        
+    } completion:^(BOOL finished){
+        [_nameTW setText:@""];
+        [_nameTW setHidden:YES];
+        
+        
+        UIView *_frameTW = [self.view viewWithTag:TAG_TWITTER_BORDER];
+        UIImageView *_picTW = (UIImageView*)[self.view viewWithTag:TAG_TWITTER_PICTURE];
+        [UIView animateWithDuration:0.3 animations:^{
+            [_frameTW setAlpha:0.0];
+            [_picTW setAlpha:0.0];
+        } completion:^(BOOL finished){
+            [_frameTW setHidden:YES];
+            [_picTW setHidden:YES];
+            
+            UIView *_logoTW = [self.view viewWithTag:TAG_TWITTER_ICON];
+            [_logoTW setHidden:NO];
+            [UIView animateWithDuration:0.3 animations:^{
+                [_logoTW setAlpha:1.0];
+            } completion:^(BOOL finished){
+                
+            }];
+        }];
+    }];
 }
 
 @end

@@ -61,7 +61,6 @@
 		4516F7DD145EAFA800699725 /* text_police@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4516F7D3145EAFA800699725 /* text_police@2x.png */; };
 		4516F7EB145EC7BD00699725 /* Tab3DetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4516F7EA145EC7BD00699725 /* Tab3DetailTableViewCell.xib */; };
 		4516F7F2145EC95D00699725 /* Tab3DetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4516F7F1145EC95D00699725 /* Tab3DetailTableViewCell.m */; };
-		4525A69F146649E50075616B /* libOAuth.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4525A69E146649E50075616B /* libOAuth.a */; };
 		453BB0F514611F500030F83F /* AnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453BB0F214611F500030F83F /* AnnotationView.m */; };
 		453BB0F614611F500030F83F /* CurrentLocationAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 453BB0F414611F500030F83F /* CurrentLocationAnnotation.m */; };
 		453BB10914615D750030F83F /* bg_water_level.png in Resources */ = {isa = PBXBuildFile; fileRef = 453BB0FF14615D750030F83F /* bg_water_level.png */; };
@@ -152,6 +151,8 @@
 		453CD496145DEE6C00F29612 /* setting_text_share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 453CD488145DEE6B00F29612 /* setting_text_share@2x.png */; };
 		453CD497145DEE6C00F29612 /* setting_twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 453CD489145DEE6C00F29612 /* setting_twitter.png */; };
 		453CD498145DEE6C00F29612 /* setting_twitter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 453CD48A145DEE6C00F29612 /* setting_twitter@2x.png */; };
+		45CFA9B714668B0E00F60A62 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CFA9B614668B0E00F60A62 /* Twitter.framework */; };
+		45CFA9BE14668DA900F60A62 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45CFA9BD14668DA900F60A62 /* Accounts.framework */; };
 		45F5A5341463D9AC0088B191 /* border_social.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F5A5321463D9AC0088B191 /* border_social.png */; };
 		45F5A5351463D9AC0088B191 /* border_social@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45F5A5331463D9AC0088B191 /* border_social@2x.png */; };
 		45F5A5381463DC8C0088B191 /* SocialData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45F5A5371463DC8C0088B191 /* SocialData.plist */; };
@@ -310,7 +311,6 @@
 		4516F7EA145EC7BD00699725 /* Tab3DetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tab3DetailTableViewCell.xib; sourceTree = "<group>"; };
 		4516F7F0145EC95D00699725 /* Tab3DetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab3DetailTableViewCell.h; sourceTree = "<group>"; };
 		4516F7F1145EC95D00699725 /* Tab3DetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab3DetailTableViewCell.m; sourceTree = "<group>"; };
-		4525A69E146649E50075616B /* libOAuth.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOAuth.a; path = "../Twitter/Twitter+OAuth/Libraries & Headers/libOAuth.a"; sourceTree = "<group>"; };
 		453BB0F114611F500030F83F /* AnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnnotationView.h; sourceTree = "<group>"; };
 		453BB0F214611F500030F83F /* AnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnnotationView.m; sourceTree = "<group>"; };
 		453BB0F314611F500030F83F /* CurrentLocationAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentLocationAnnotation.h; sourceTree = "<group>"; };
@@ -411,6 +411,8 @@
 		453CD488145DEE6B00F29612 /* setting_text_share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting_text_share@2x.png"; sourceTree = "<group>"; };
 		453CD489145DEE6C00F29612 /* setting_twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setting_twitter.png; sourceTree = "<group>"; };
 		453CD48A145DEE6C00F29612 /* setting_twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting_twitter@2x.png"; sourceTree = "<group>"; };
+		45CFA9B614668B0E00F60A62 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		45CFA9BD14668DA900F60A62 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		45F5A5321463D9AC0088B191 /* border_social.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = border_social.png; sourceTree = "<group>"; };
 		45F5A5331463D9AC0088B191 /* border_social@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "border_social@2x.png"; sourceTree = "<group>"; };
 		45F5A5371463DC8C0088B191 /* SocialData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SocialData.plist; sourceTree = "<group>"; };
@@ -556,7 +558,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4525A69F146649E50075616B /* libOAuth.a in Frameworks */,
+				45CFA9BE14668DA900F60A62 /* Accounts.framework in Frameworks */,
+				45CFA9B714668B0E00F60A62 /* Twitter.framework in Frameworks */,
 				CAE68F2D14600A9400CA766D /* libxml2.dylib in Frameworks */,
 				CAE68F2E14600A9400CA766D /* libz.dylib in Frameworks */,
 				4516F780145E61ED00699725 /* QuartzCore.framework in Frameworks */,
@@ -854,10 +857,11 @@
 		84A4CCD5145E5E68009DD339 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4525A69E146649E50075616B /* libOAuth.a */,
 				CAE68F2B14600A9400CA766D /* libxml2.dylib */,
 				CAE68F2C14600A9400CA766D /* libz.dylib */,
 				CAE68F2314600A7400CA766D /* CFNetwork.framework */,
+				45CFA9BD14668DA900F60A62 /* Accounts.framework */,
+				45CFA9B614668B0E00F60A62 /* Twitter.framework */,
 				CAE68F2414600A7400CA766D /* CoreLocation.framework */,
 				CAE68F2514600A7400CA766D /* MobileCoreServices.framework */,
 				CAE68F2614600A7400CA766D /* SystemConfiguration.framework */,
