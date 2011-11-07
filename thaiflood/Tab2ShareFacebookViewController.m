@@ -23,6 +23,10 @@
 #define TAG_DESCRIPTION_BOX 107
 #define TAG_TITLE_BOX       108
 
+@interface Tab2ShareFacebookViewController (Privated)
+- (UIView*)getView:(NSInteger)_tag;
+@end
+
 @implementation Tab2ShareFacebookViewController
 @synthesize shareDetail,request;
 
@@ -69,6 +73,23 @@
     newShadow.frame = CGRectMake(0,navigationBarBottom, self.view.frame.size.width, 3);
     newShadow.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
     [self.view.layer addSublayer:newShadow];
+    
+    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n%@",[NSString stringWithFormat:@"%@...", [[shareDetail objectForKey:@"description"] substringToIndex:50]]]];
+    [((UILabel*)[self getView:TAG_TITLE_BOX]) setText:[shareDetail objectForKey:@"title"]];
+    UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    [_loadingView setTag:66];
+    [_loadingView setFrame:CGRectMake(140, 60, 20, 20)];
+    [_loadingView startAnimating];
+    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) addSubview:_loadingView];
+    [_loadingView release];
+    
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
+    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[shareDetail objectForKey:@"picture"]]];
+    self.request = [ASIHTTPRequest requestWithURL:_url];
+    [self.request setDelegate:self];
+    [self.request startAsynchronous];
 }
 
 - (UIView*)getView:(NSInteger)_tag
@@ -128,23 +149,7 @@
         [self.navigationItem setRightBarButtonItem:customBarItem2];
         [customBarItem2 release];
     }
-    
-    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n%@",[NSString stringWithFormat:@"%@...", [[shareDetail objectForKey:@"description"] substringToIndex:100]]]];
-    [((UILabel*)[self getView:TAG_TITLE_BOX]) setText:[shareDetail objectForKey:@"title"]];
-    UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    [_loadingView setTag:66];
-    [_loadingView setFrame:CGRectMake(150, 71, 20, 20)];
-    [_loadingView startAnimating];
-    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) addSubview:_loadingView];
-    [_loadingView release];
-    
-    [self.request setDelegate:nil];
-    [self.request cancel];
-    [self.request release];
-    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[shareDetail objectForKey:@"picture"]]];
-    self.request = [ASIHTTPRequest requestWithURL:_url];
-    [self.request setDelegate:self];
-    [self.request startAsynchronous];
+
 }
 
 - (void)viewDidUnload

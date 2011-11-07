@@ -23,6 +23,10 @@
 #define TAG_DESCRIPTION_BOX 107
 #define TAG_TITLE_BOX       108
 
+@interface Tab2ShareTwitterViewController (Privated)
+- (UIView*)getView:(NSInteger)_tag;
+@end
+
 @implementation Tab2ShareTwitterViewController
 @synthesize shareDetail,request;
 
@@ -78,6 +82,23 @@
     newShadow.frame = CGRectMake(0,navigationBarBottom, self.view.frame.size.width, 3);
     newShadow.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
     [self.view.layer addSublayer:newShadow];
+    
+    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n%@",[NSString stringWithFormat:@"%@...", [[shareDetail objectForKey:@"description"] substringToIndex:50]]]];
+    [((UILabel*)[self getView:TAG_TITLE_BOX]) setText:[shareDetail objectForKey:@"title"]];
+    UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    [_loadingView setTag:66];
+    [_loadingView setFrame:CGRectMake(140, 60, 20, 20)];
+    [_loadingView startAnimating];
+    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) addSubview:_loadingView];
+    [_loadingView release];
+    
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
+    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[shareDetail objectForKey:@"picture"]]];
+    self.request = [ASIHTTPRequest requestWithURL:_url];
+    [self.request setDelegate:self];
+    [self.request startAsynchronous];
 }
 
 - (UIView*)getView:(NSInteger)_tag
@@ -138,22 +159,6 @@
         [customBarItem2 release];
     }
     
-    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n%@",[NSString stringWithFormat:@"%@...", [[shareDetail objectForKey:@"description"] substringToIndex:100]]]];
-    [((UILabel*)[self getView:TAG_TITLE_BOX]) setText:[shareDetail objectForKey:@"title"]];
-    UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    [_loadingView setTag:66];
-    [_loadingView setFrame:CGRectMake(150, 71, 20, 20)];
-    [_loadingView startAnimating];
-    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) addSubview:_loadingView];
-    [_loadingView release];
-    
-    [self.request setDelegate:nil];
-    [self.request cancel];
-    [self.request release];
-    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[shareDetail objectForKey:@"picture"]]];
-    self.request = [ASIHTTPRequest requestWithURL:_url];
-    [self.request setDelegate:self];
-    [self.request startAsynchronous];
 }
 
 - (void)viewDidUnload
@@ -183,15 +188,18 @@
 
 - (void)postTwitter
 {
-//    NSString *_title2 = [shareDetail objectForKey:@"title"];
+    NSString *_title2 = [shareDetail objectForKey:@"title"];
 //    NSString *_type = [shareDetail objectForKey:@"type"];
 //    NSString *_message = ((UITextView*)[self getView:TAG_MESSAGE_BOX]).text;
 //    NSString *_description = [shareDetail objectForKey:@"description"];
 //    NSString *_image = [shareDetail objectForKey:@"picture"];
+    NSString *_link = @"http://www.appspheregroup.com";
     
     // add HUD
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = @"Posting";
+    
+    [[Social sharedSocial] shareTwitterFloodTitle:_title2 linkURL:_link withDelegate:self];
 }
 
 -(void) didFinishShare
