@@ -19,8 +19,11 @@
 #define TAG_SHARE_PICTURE   105
 
 #define TAG_MESSAGE_BOX     106
+#define TAG_DESCRIPTION_BOX 107
+#define TAG_TITLE_BOX       108
 
 @implementation Tab2ShareFacebookViewController
+@synthesize shareDetail,request;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -124,6 +127,23 @@
         [self.navigationItem setRightBarButtonItem:customBarItem2];
         [customBarItem2 release];
     }
+    
+    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n%@",[NSString stringWithFormat:@"%@...", [[shareDetail objectForKey:@"description"] substringToIndex:100]]]];
+    [((UILabel*)[self getView:TAG_TITLE_BOX]) setText:[shareDetail objectForKey:@"title"]];
+    UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    [_loadingView setTag:66];
+    [_loadingView setFrame:CGRectMake(150, 71, 20, 20)];
+    [_loadingView startAnimating];
+    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) addSubview:_loadingView];
+    [_loadingView release];
+    
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
+    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[shareDetail objectForKey:@"picture"]]];
+    self.request = [ASIHTTPRequest requestWithURL:_url];
+    [self.request setDelegate:self];
+    [self.request startAsynchronous];
 }
 
 - (void)viewDidUnload
@@ -131,6 +151,12 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+-(void)dealloc
+{
+    [shareDetail release];
+    [super dealloc];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -146,11 +172,46 @@
 
 - (void) postFacebook
 {
+    NSString *_title2 = [shareDetail objectForKey:@"title"];
+    NSString *_type = [shareDetail objectForKey:@"type"];
+    NSString *_message = ((UITextView*)[self getView:TAG_MESSAGE_BOX]).text;
+    NSString *_description = [shareDetail objectForKey:@"description"];
+    NSString *_image = [shareDetail objectForKey:@"picture"];
     
+    [[Social sharedSocial] shareFacebookFloodTitle:_title2 detail:_description linkURL:@"http://www.appspheregroup.com" imageURL:_image caption:_type messsage:_message withDelegate:self];
+}
+
+-(void) didFinishShare
+{
+    NSLog(@"Share Successful");
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)dismissKeyboard:(id)sender {
     [[self getView:TAG_MESSAGE_BOX] resignFirstResponder];
 }
 
+#pragma mark Request
+- (void)requestFinished:(ASIHTTPRequest *)_request
+{
+    UITextView *_detailTextView = (UITextView*)[self getView:TAG_DESCRIPTION_BOX];
+    NSData *responseData = [_request responseData];
+    UIImageView *_pic = [[UIImageView alloc]initWithImage:[UIImage imageWithData:responseData]];
+    [_pic setFrame:CGRectMake(62, 6, 175, 128)];
+    [_detailTextView addSubview:_pic];
+    [_pic release];
+    UIImageView *_border = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"map_border_big.png"]];
+    [_border setFrame:CGRectMake(54, -2, 190, 143)];
+    [_detailTextView addSubview:_border];
+    [_border release];
+    
+    UIActivityIndicatorView *_loadingView = (UIActivityIndicatorView*)[_detailTextView viewWithTag:66];
+    [_loadingView stopAnimating];
+    [_loadingView removeFromSuperview];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)_request
+{
+    //NSError *error = [request error];
+}
 @end

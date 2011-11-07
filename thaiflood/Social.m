@@ -11,6 +11,8 @@
 #define FACEBOOK_EXPIRE_DATE         @"FBExpirationDateKey"
 #define PERMISSION_EMAIL             @"email"
 #define PERMISSION_STREAM            @"publish_stream"
+#define PERMISSION_READ              @"read_stream"
+#define PERMISSION_OFFLINE_ACCESS    @"offline_access"
 #define FEED_LINK                    @"link"
 #define FEED_PICTURE                 @"picture"
 #define FEED_NAME                    @"name"
@@ -25,7 +27,7 @@
 static Social *_instance;
 @implementation Social
 @synthesize facebook, tab4Delegate;
-@synthesize socialPlist;
+@synthesize socialPlist, shareDelegate;
 
 #pragma mark -
 #pragma mark Singleton Methods
@@ -39,6 +41,15 @@ static Social *_instance;
             _instance = [[self alloc] init];
             
             _instance.facebook = [[Facebook alloc] initWithAppId:@"270426946332947" andDelegate:_instance];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            if ([defaults objectForKey:@"FBAccessTokenKey"] 
+                && [defaults objectForKey:@"FBExpirationDateKey"]) {
+                _instance.facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
+                _instance.facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+            }
+            if (![_instance.facebook isSessionValid]) {
+                NSLog(@"NO Session");
+            }
             
             NSString *databasePlistPath = [NSString stringWithFormat: @"%@/SocialData.plist", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex: 0]];
             if (![[NSFileManager defaultManager] fileExistsAtPath: databasePlistPath]){
@@ -114,8 +125,8 @@ static Social *_instance;
 {
     self.tab4Delegate = delegate;
     if (![_instance.facebook isSessionValid]) {
-        NSArray* permissions =  [NSArray arrayWithObjects: PERMISSION_EMAIL, PERMISSION_STREAM, nil];
-        [facebook authorize:permissions];
+        NSArray* permissions =  [NSArray arrayWithObjects: PERMISSION_OFFLINE_ACCESS, PERMISSION_STREAM, PERMISSION_READ, nil];
+        [_instance.facebook authorize:permissions];
     }
 }
 
@@ -176,22 +187,27 @@ static Social *_instance;
     //[tab4Delegate release];
 }
 
-- (void) shareFacebookFloodTitle:(NSString*)_title detail:(NSString*)_detail linkURL:(NSString*)_link imageURL:(NSString*)_image caption:(NSString*)_caption 
+- (void) shareFacebookFloodTitle:(NSString*)_title detail:(NSString*)_detail linkURL:(NSString*)_link imageURL:(NSString*)_image caption:(NSString*)_caption messsage:(NSString*)_message withDelegate:(id<Social2ShareDelegate>)delegate
 {
-    NSString *shortDetail = [NSString stringWithFormat:@"%@...", [_detail substringToIndex:100]];
+    self.shareDelegate = delegate;
     
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    _link, FEED_LINK,
                                    _image, FEED_PICTURE,
                                    _title, FEED_NAME,
                                    _caption, FEED_CAPTION,
-                                   shortDetail, FEED_DESCRIPTION,
-                                   @"",  FEED_MESSAGE,
+                                   _detail, FEED_DESCRIPTION,
+                                   _message,  FEED_MESSAGE,
                                    nil];
+//    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+//                                    _message, @"message",
+//                                    nil];
     
-    [_instance.facebook dialog:@"feed"
-           andParams:params
-         andDelegate:_instance];
+    [_instance.facebook requestWithGraphPath:@"me/feed"
+                          andParams:params
+                      andHttpMethod:@"POST"
+                        andDelegate:self]; 
+
 }
 
 -(void)dialogDidComplete:(FBDialog *)dialog
@@ -204,18 +220,24 @@ static Social *_instance;
 }
 
 - (void)request:(FBRequest *)request didLoad:(id)result {
+    NSLog(@"request didLoad");
     if (![result isKindOfClass:[NSData class]]) {
-        NSLog(@"didLoad for name");
-        NSString *_name = [result objectForKey:@"name"];
-        NSMutableDictionary *_facebook = [[NSMutableDictionary alloc] init];
-        [_facebook setObject:_name forKey:@"name"];
-        [_facebook setObject:[[_instance.socialPlist objectForKey:@"Facebook"] objectForKey:@"picture"] forKey:@"picture"];
-        [_instance.socialPlist setObject:_facebook forKey:@"Facebook"];
-        [_facebook release];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
-        NSString *documentsDir = [paths objectAtIndex:0];
-        NSString *fullPath = [documentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"SocialData.plist"]]; 
-        [_instance.socialPlist writeToFile:fullPath atomically:YES];
+        if (![request.url hasPrefix:@"https://graph.facebook.com/me/feed"]) {
+            NSLog(@"didLoad for name");
+            NSString *_name = [result objectForKey:@"name"];
+            NSMutableDictionary *_facebook = [[NSMutableDictionary alloc] init];
+            [_facebook setObject:_name forKey:@"name"];
+            [_facebook setObject:[[_instance.socialPlist objectForKey:@"Facebook"] objectForKey:@"picture"] forKey:@"picture"];
+            [_instance.socialPlist setObject:_facebook forKey:@"Facebook"];
+            [_facebook release];
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
+            NSString *documentsDir = [paths objectAtIndex:0];
+            NSString *fullPath = [documentsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"SocialData.plist"]]; 
+            [_instance.socialPlist writeToFile:fullPath atomically:YES];
+        }else{
+            NSLog(@"Result of API call");
+            [shareDelegate didFinishShare];
+        }
     }else{
         NSLog(@"didLoad for picture");
         UIImage *_pic = [UIImage imageWithData:result];
@@ -239,6 +261,7 @@ static Social *_instance;
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
     NSLog(@"%@", [error localizedDescription]);
+    NSLog(@"Err details: %@", [error description]);
 }
 
 #pragma mark - Twitter

@@ -179,6 +179,15 @@
 
 - (IBAction)shareFacebook:(id)sender {
     Tab2ShareFacebookViewController *detailViewController = [[Tab2ShareFacebookViewController alloc] initWithNibName:@"Tab2ShareFacebookViewController" bundle:nil];
+    
+    //Set up share object
+    NSMutableDictionary *_shareObject = [[NSMutableDictionary alloc] init];
+    [_shareObject setObject:[annoucementDetail objectForKey:@"title"] forKey:@"title"];
+    [_shareObject setObject:[annoucementDetail objectForKey:@"description"] forKey:@"description"];
+    [_shareObject setObject:[annoucementDetail objectForKey:@"picture"] forKey:@"picture"];
+    [_shareObject setObject:@"Announcement" forKey:@"type"];
+    [detailViewController setShareDetail:_shareObject];
+    
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
 }
