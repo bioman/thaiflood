@@ -187,6 +187,7 @@
     [_shareObject setObject:[annoucementDetail objectForKey:@"picture"] forKey:@"picture"];
     [_shareObject setObject:@"Announcement" forKey:@"type"];
     [detailViewController setShareDetail:_shareObject];
+    [_shareObject release];
     
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
@@ -194,6 +195,16 @@
 
 - (IBAction)shareTwitter:(id)sender {
     Tab2ShareTwitterViewController *detailViewController = [[Tab2ShareTwitterViewController alloc] initWithNibName:@"Tab2ShareTwitterViewController" bundle:nil];
+    
+    //Set up share object
+    NSMutableDictionary *_shareObject = [[NSMutableDictionary alloc] init];
+    [_shareObject setObject:[annoucementDetail objectForKey:@"title"] forKey:@"title"];
+    [_shareObject setObject:[annoucementDetail objectForKey:@"description"] forKey:@"description"];
+    [_shareObject setObject:[annoucementDetail objectForKey:@"picture"] forKey:@"picture"];
+    [_shareObject setObject:@"Announcement" forKey:@"type"];
+    [detailViewController setShareDetail:_shareObject];
+    [_shareObject release];
+    
     [self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
 }

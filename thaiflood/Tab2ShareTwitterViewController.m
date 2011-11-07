@@ -8,8 +8,23 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "Tab2ShareTwitterViewController.h"
+#import "Social.h"
+#import "MBProgressHUD.h"
+
+#define TAG_SETTING         200
+#define TAG_LOGO            201
+
+#define TAG_SHARE_NAME      101
+#define TAG_SHARE_DATE      102
+#define TAG_SHARE_FRAME     104
+#define TAG_SHARE_PICTURE   105
+
+#define TAG_MESSAGE_BOX     106
+#define TAG_DESCRIPTION_BOX 107
+#define TAG_TITLE_BOX       108
 
 @implementation Tab2ShareTwitterViewController
+@synthesize shareDetail,request;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,11 +80,94 @@
     [self.view.layer addSublayer:newShadow];
 }
 
+- (UIView*)getView:(NSInteger)_tag
+{
+    return [self.view viewWithTag:_tag];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if (![[Social sharedSocial] isDidLogInTwitter]) {
+        [[self getView:TAG_SETTING] setHidden:NO];
+        [[self getView:TAG_LOGO] setHidden:NO];
+        
+        [[self getView:TAG_SHARE_NAME] setHidden:YES];
+        [[self getView:TAG_SHARE_DATE] setHidden:YES]; 
+        [[self getView:TAG_SHARE_FRAME] setHidden:YES];
+        [[self getView:TAG_SHARE_PICTURE] setHidden:YES];
+        
+        UIImage *buttonImage2 = [UIImage imageNamed:@"button_post.png"];
+        UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
+        [button2 addTarget:self action:@selector(postTwitter) forControlEvents:UIControlEventTouchUpInside];
+        [button2 setEnabled:NO];
+        [button2 setImage:buttonImage2 forState:UIControlStateNormal];
+        button2.frame = CGRectMake(0, 0, buttonImage2.size.width, buttonImage2.size.height);
+        UIBarButtonItem *customBarItem2 = [[UIBarButtonItem alloc] initWithCustomView:button2];
+        [self.navigationItem setRightBarButtonItem:customBarItem2];
+        [customBarItem2 release];
+    }else{
+        [[self getView:TAG_SETTING] setHidden:YES];
+        [[self getView:TAG_LOGO] setHidden:YES];
+        
+        [[self getView:TAG_SHARE_NAME] setHidden:NO];
+        [[self getView:TAG_SHARE_DATE] setHidden:NO]; 
+        [[self getView:TAG_SHARE_FRAME] setHidden:NO];
+        [[self getView:TAG_SHARE_PICTURE] setHidden:NO];
+        
+        UILabel *_name = (UILabel*)[self getView:TAG_SHARE_NAME];
+        UILabel *_date = (UILabel*)[self getView:TAG_SHARE_DATE];
+        UIImageView *_pic = (UIImageView*)[self getView:TAG_SHARE_PICTURE];
+        NSDictionary *_social = [[[Social sharedSocial] socialPlist] objectForKey:@"Twitter"];
+        [_name setText:[_social objectForKey:@"name"]];
+        [_pic setImage:[UIImage imageWithContentsOfFile:[_social objectForKey:@"picture"]]];
+        NSDate *today = [NSDate date];
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setDateFormat:@"MMMM,dd yyyy hh:mm a"];
+        NSString *dateString = [dateFormat stringFromDate:today];
+        [_date setText:dateString];
+        [dateFormat release];
+        
+        UIImage *buttonImage2 = [UIImage imageNamed:@"button_post.png"];
+        UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
+        [button2 addTarget:self action:@selector(postTwitter) forControlEvents:UIControlEventTouchUpInside];
+        [button2 setEnabled:YES];
+        [button2 setImage:buttonImage2 forState:UIControlStateNormal];
+        button2.frame = CGRectMake(0, 0, buttonImage2.size.width, buttonImage2.size.height);
+        UIBarButtonItem *customBarItem2 = [[UIBarButtonItem alloc] initWithCustomView:button2];
+        [self.navigationItem setRightBarButtonItem:customBarItem2];
+        [customBarItem2 release];
+    }
+    
+    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n%@",[NSString stringWithFormat:@"%@...", [[shareDetail objectForKey:@"description"] substringToIndex:100]]]];
+    [((UILabel*)[self getView:TAG_TITLE_BOX]) setText:[shareDetail objectForKey:@"title"]];
+    UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    [_loadingView setTag:66];
+    [_loadingView setFrame:CGRectMake(150, 71, 20, 20)];
+    [_loadingView startAnimating];
+    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) addSubview:_loadingView];
+    [_loadingView release];
+    
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
+    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[shareDetail objectForKey:@"picture"]]];
+    self.request = [ASIHTTPRequest requestWithURL:_url];
+    [self.request setDelegate:self];
+    [self.request startAsynchronous];
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+-(void)dealloc
+{
+    [shareDetail release];
+    [request release];
+    [super dealloc];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -85,7 +183,50 @@
 
 - (void)postTwitter
 {
+//    NSString *_title2 = [shareDetail objectForKey:@"title"];
+//    NSString *_type = [shareDetail objectForKey:@"type"];
+//    NSString *_message = ((UITextView*)[self getView:TAG_MESSAGE_BOX]).text;
+//    NSString *_description = [shareDetail objectForKey:@"description"];
+//    NSString *_image = [shareDetail objectForKey:@"picture"];
     
+    // add HUD
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Posting";
 }
 
+-(void) didFinishShare
+{
+    NSLog(@"Share Successful");
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)dismissKeyboard:(id)sender {
+    [[self getView:TAG_MESSAGE_BOX] resignFirstResponder];
+    [[self getView:TAG_DESCRIPTION_BOX] resignFirstResponder];
+}
+
+#pragma mark Request
+- (void)requestFinished:(ASIHTTPRequest *)_request
+{
+    UITextView *_detailTextView = (UITextView*)[self getView:TAG_DESCRIPTION_BOX];
+    NSData *responseData = [_request responseData];
+    UIImageView *_pic = [[UIImageView alloc]initWithImage:[UIImage imageWithData:responseData]];
+    [_pic setFrame:CGRectMake(62, 6, 175, 128)];
+    [_detailTextView addSubview:_pic];
+    [_pic release];
+    UIImageView *_border = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"map_border_big.png"]];
+    [_border setFrame:CGRectMake(54, -2, 190, 143)];
+    [_detailTextView addSubview:_border];
+    [_border release];
+    
+    UIActivityIndicatorView *_loadingView = (UIActivityIndicatorView*)[_detailTextView viewWithTag:66];
+    [_loadingView stopAnimating];
+    [_loadingView removeFromSuperview];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)_request
+{
+    //NSError *error = [request error];
+}
 @end

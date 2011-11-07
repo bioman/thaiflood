@@ -33,5 +33,6 @@
 - (void) logInTwitter:(id<Social2Tab4Delegate>)delegate;
 - (void) logOutTwitter:(id<Social2Tab4Delegate>)delegate;
 - (BOOL) isDidLogInTwitter;
+- (void) shareTwitterFloodTitle:(NSString *)_title linkURL:(NSString *)_link withDelegate:(id<Social2ShareDelegate>)delegate;
 
 @end

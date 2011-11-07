@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Tab2ShareFacebookViewController.h"
 #import "Social.h"
+#import "MBProgressHUD.h"
 
 #define TAG_SETTING         200
 #define TAG_LOGO            201
@@ -155,6 +156,7 @@
 
 -(void)dealloc
 {
+    [request release];
     [shareDetail release];
     [super dealloc];
 }
@@ -178,17 +180,23 @@
     NSString *_description = [shareDetail objectForKey:@"description"];
     NSString *_image = [shareDetail objectForKey:@"picture"];
     
+    // add HUD
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Posting";
+    
     [[Social sharedSocial] shareFacebookFloodTitle:_title2 detail:_description linkURL:@"http://www.appspheregroup.com" imageURL:_image caption:_type messsage:_message withDelegate:self];
 }
 
 -(void) didFinishShare
 {
     NSLog(@"Share Successful");
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)dismissKeyboard:(id)sender {
     [[self getView:TAG_MESSAGE_BOX] resignFirstResponder];
+    [[self getView:TAG_DESCRIPTION_BOX] resignFirstResponder];
 }
 
 #pragma mark Request

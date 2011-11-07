@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Social2ShareDelegate.h"
+#import "ASIHTTPRequest.h"
 
-@interface Tab2ShareTwitterViewController : UIViewController
+@interface Tab2ShareTwitterViewController : UIViewController <Social2ShareDelegate, ASIHTTPRequestDelegate>
+{
+    NSDictionary *shareDetail;
+    ASIHTTPRequest *request;
+}
+@property (nonatomic, retain) NSDictionary *shareDetail;
+@property (nonatomic, retain) ASIHTTPRequest *request;
 
+- (IBAction)dismissKeyboard:(id)sender;
 @end

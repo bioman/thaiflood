@@ -152,6 +152,7 @@
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<int key="IBUITag">107</int>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<bool key="IBUIEditable">NO</bool>
 						<string key="IBUIText">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">1</int>
@@ -254,7 +255,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">frame_share.png</string>
+							<string key="NSResourceName">frame_share_facebook.png</string>
 						</object>
 					</object>
 					<object class="IBUITextView" id="637062656">
@@ -263,7 +264,7 @@
 						<string key="NSFrame">{{13, 110}, {293, 62}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="888896222"/>
+						<reference key="NSNextKeyView" ref="627536929"/>
 						<string key="NSReuseIdentifierKey">_NS:639</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -286,7 +287,7 @@
 						<reference key="IBUIFontDescription" ref="814749993"/>
 						<reference key="IBUIFont" ref="581489569"/>
 					</object>
-					<object class="IBUILabel" id="888896222">
+					<object class="IBUILabel" id="627536929">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{15, 180}, {290, 21}}</string>
@@ -375,7 +376,7 @@
 							<reference ref="841417542"/>
 							<reference ref="632928564"/>
 							<reference ref="637062656"/>
-							<reference ref="888896222"/>
+							<reference ref="627536929"/>
 							<reference ref="172172961"/>
 						</array>
 						<reference key="parent" ref="0"/>
@@ -443,7 +444,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">23</int>
-						<reference key="object" ref="888896222"/>
+						<reference key="object" ref="627536929"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
@@ -502,7 +503,7 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="announcement_detail.png">{320, 84}</string>
-			<string key="frame_share.png">{69, 69}</string>
+			<string key="frame_share_facebook.png">{69, 69}</string>
 			<string key="icon_facebook_large.png">{69, 69}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">933</string>
