@@ -38,6 +38,16 @@
 	return self;
 }
 
+- (void)initRedraw {
+    NSLog(@"initRedraw");
+    self.frame = CGRectMake(0,0,40,40);
+    [self setNeedsDisplay];
+}
+
+- (void)drawRect:(CGRect)rect {
+    NSLog(@"in draw rect");
+}
+
 - (void)didMoveToSuperview {
     NSLog(@"didMoveToSuperview");
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform"];

@@ -16,5 +16,6 @@
 
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *subtitle;
+@property (nonatomic, retain) NSString *type;
 
 @end

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface Tab1PinViewController : UIViewController
+@interface Tab1PinViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @end

@@ -15,6 +15,7 @@
 #import "Tab1AddViewController.h"
 #import "SBJson.h"
 
+
 @interface Tab1MainViewController (Privated)
 - (void)showSubMenu;
 - (void)hideSubMenu;
@@ -23,6 +24,10 @@
 
 @implementation Tab1MainViewController
 @synthesize mvMapView,locationManager, currentLocation;
+@synthesize mapAnnotations;
+@synthesize address1,address2;
+
+NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -76,27 +81,70 @@
 
 #pragma mark -
 #pragma mark Map Kit
+- (void) mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
+    CGRect visibleRect = [mapView annotationVisibleRect]; 
+    for (MKAnnotationView *view in views) {
+        CGRect endFrame = view.frame;
+        CGRect startFrame = endFrame; startFrame.origin.y = visibleRect.origin.y - startFrame.size.height;
+        view.frame = startFrame;
+        
+        [UIView beginAnimations:@"drop" context:NULL]; 
+        [UIView setAnimationDuration:1];
+        
+        view.frame = endFrame;
+        
+        [UIView commitAnimations];
+    }
+}
+
+
 - (MKAnnotationView *)mapView:(MKMapView *)MapView viewForAnnotation:(id <MKAnnotation>)annotation
 {
+    //annotation 
 	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
 	MKAnnotationView *draggablePinView = [MapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
 	
 	if (draggablePinView) {
+        NSLog(@"old pin");
 		draggablePinView.annotation = annotation;
-	} else {		
-		draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
-		if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
-			((AnnotationView *)draggablePinView).mapView = MapView;
-		}
-        draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-        draggablePinView.canShowCallout = YES;
+	} else {
+        if( ![[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"normal"] ) {
+            draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
+            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
+                ((AnnotationView *)draggablePinView).mapView = MapView;
+            }
+            //UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+            //draggablePinView.image = pinImage;
+            //draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
+            draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            draggablePinView.canShowCallout = YES;
+            //draggablePinView.tag
+        }else{
+            
+            draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
+            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
+                ((AnnotationView *)draggablePinView).mapView = MapView;
+            }
+            //UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+            //draggablePinView.image = pinImage;
+            //draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
+            draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            draggablePinView.canShowCallout = YES;
+            draggablePinView.draggable = NO;
+        }
+        [draggablePinView addObserver:self
+                  forKeyPath:@"selected"
+                     options:NSKeyValueObservingOptionNew
+                     context:GMAP_ANNOTATION_SELECTED];
 	}
+    //UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+    //draggablePinView.image = pinImage;
 	return draggablePinView;
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
 {
-	if (oldState == MKAnnotationViewDragStateDragging) {
+    if (oldState == MKAnnotationViewDragStateDragging) {
         selectedAnnotation = (CurrentLocationAnnotation *)annotationView.annotation;
         
         NSString *_url = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f2&language=th&sensor=false", selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude];
@@ -115,27 +163,63 @@
         
         
         
-        
-        
-		
-		selectedAnnotation.subtitle = [NSString stringWithFormat:@"%f %f", selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude];
+		selectedAnnotation.title = [NSString stringWithString:@"Loading...                     "];
+        selectedAnnotation.subtitle = [NSString stringWithFormat:@"%f %f", selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude];
         //[self connectDots];
 	}
 }
 
--(MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id)overlay{
-    MKPolylineView *polyLineView = [[[MKPolylineView alloc] initWithOverlay:overlay] autorelease];
-    polyLineView.strokeColor = [UIColor redColor];
-    polyLineView.lineWidth = 5.0;
-    return polyLineView;
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context{
+	
+    
+    NSString *action = (NSString*)context;
+	
+    if([action isEqualToString:GMAP_ANNOTATION_SELECTED]){
+		BOOL annotationAppeared = [[change valueForKey:@"new"] boolValue];
+		if (annotationAppeared) {
+			NSLog(@"annotation selected %@", ((AnnotationView*) object).annotation.title);
+			//[self showAnnotation:((MyAnnotationView*) object).annotation];
+			//((AnnotationView*) object).image = [UIImage imageNamed:@"pin.png"];
+		}
+		else {
+			NSLog(@"annotation deselected %@", ((AnnotationView*) object).annotation.title);
+			//[self hideAnnotation];
+			//((AnnotationView*) object).image = [UIImage imageNamed:@"pin.png"];
+		}
+	}
 }
+
+- (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
+{
+    NSLog(@"didDeselectAnnotationView");
+    //view.image = [UIImage imageNamed:@"pin.png"];
+}
+
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+{
+    //I think here you will be adding a annotation(my assumption)
+    NSLog(@"didSelectAnnotationView");
+    //view.image = [UIImage imageNamed:@"pin.png"];
+    //[mapView addAnnotation:yourAnnotation];
+    //This will call viewForAnnotation again
+}
+
+//-(MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id)overlay{
+//    MKPolylineView *polyLineView = [[[MKPolylineView alloc] initWithOverlay:overlay] autorelease];
+//    polyLineView.strokeColor = [UIColor redColor];
+//    polyLineView.lineWidth = 5.0;
+//    return polyLineView;
+//}
 
 -(void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
     
-    //DetailViewController *detailViewController = [[DetailViewController alloc] initWithCurrentAnnotation:selectedAnnotation];
-    //[self.navigationController pushViewController:detailViewController animated:YES];
-    //[detailViewController release];
+//    DetailViewController *detailViewController = [[DetailViewController alloc] initWithCurrentAnnotation:selectedAnnotation];
+//    [self.navigationController pushViewController:detailViewController animated:YES];
+//    [detailViewController release];
 }
 
 #pragma mark - NSURLConnection Delegate
@@ -174,27 +258,75 @@
     
     if (request.responseStatusCode == 200)
     {
-        NSString *responseString = [request responseString];
-        NSLog(@"responseString = %@",responseString);
-        // create dictionary from JSON text
-        NSDictionary *responseDict = [responseString JSONValue];
-        
-        // retrieve the longitude and latitude from JSON response
-//        NSString *status = [responseDict objectForKey:@"status"];
-        NSArray *results = (NSArray *)[responseDict objectForKey:@"results"];
-        if([results count] > 0){
-            NSDictionary *data = (NSDictionary *)[results objectAtIndex:0];
-            NSArray *address_components = (NSArray *)[data objectForKey:@"address_components"];
-            //NSDictionary *latlng = (NSDictionary *)[address_components objectForKey:@"long_name"];
-            NSLog(@"%i",[address_components count]);
-//            NSLog(@"long_name %@", [(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"]);
-            [selectedAnnotation setTitle:[NSString stringWithFormat:@"%@ %@",[(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"],[(NSDictionary *)[address_components objectAtIndex:1] objectForKey:@"long_name"]]];
-            [selectedAnnotation setSubtitle:[NSString stringWithFormat:@"%f,%f",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude]];
+        if(request.tag == 414)
+        {
+            NSString *responseString = [request responseString];
+            NSLog(@"responseString1 = %@",responseString);
+            // create dictionary from JSON text
+            NSArray *responseArray = [responseString JSONValue];
+            
+            
+            [mapAnnotations removeAllObjects];
+            
+            //NSArray *results = (NSArray *)[responseDict objectForKey:@"results"];
+            NSLog(@"results %i",[responseArray count]);
+            for (NSDictionary* dict in responseArray) {
+                NSLog(@"%@",[dict objectForKey:@"pin_id"]);
+                NSLog(@"%@",[dict objectForKey:@"lat"]);
+                NSLog(@"%@",[dict objectForKey:@"lng"]);
+                NSLog(@"%@",[dict objectForKey:@"address1"]);
+            
+                CLLocationCoordinate2D theCoordinate;
+                double latitude = [[dict objectForKey:@"lat"] doubleValue];
+                double longitude = [[dict objectForKey:@"lng"] doubleValue];
+                theCoordinate.latitude = latitude;
+                theCoordinate.longitude = longitude;
+                
+                CurrentLocationAnnotation *theLocation = [[[CurrentLocationAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
+                [theLocation setTitle:[NSString stringWithFormat:@"%@ %@",[dict objectForKey:@"address1"],[dict objectForKey:@"address2"]]];
+                [theLocation setSubtitle:[NSString stringWithFormat:@"%@,%@",[dict objectForKey:@"lat"],[dict objectForKey:@"lng"]]];
+                [theLocation setType:@"normal"];
+                [mapAnnotations addObject:theLocation];
+                
+            }
+            [mvMapView addAnnotations:mapAnnotations];
+            [mvMapView setDelegate:self];
+            
         }else{
-            [selectedAnnotation setTitle:@"Unknown"];
+            NSString *responseString = [request responseString];
+            NSLog(@"responseString = %@",responseString);
+            // create dictionary from JSON text
+            NSDictionary *responseDict = [responseString JSONValue];
+            
+            // retrieve the longitude and latitude from JSON response
+            //        NSString *status = [responseDict objectForKey:@"status"];
+            NSArray *results = (NSArray *)[responseDict objectForKey:@"results"];
+            if([results count] > 0){
+                NSDictionary *data = (NSDictionary *)[results objectAtIndex:0];
+                NSArray *address_components = (NSArray *)[data objectForKey:@"address_components"];
+                //NSDictionary *latlng = (NSDictionary *)[address_components objectForKey:@"long_name"];
+                NSLog(@"%i",[address_components count]);
+                NSLog(@"- %@",[(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"]);
+                NSLog(@"- %@",[(NSDictionary *)[address_components objectAtIndex:1] objectForKey:@"long_name"]);
+                //            NSLog(@"long_name %@", [(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"]);
+                if ([address_components count] > 2) {
+                    
+                    [self setAddress1:[(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"]];
+                    [self setAddress2:[(NSDictionary *)[address_components objectAtIndex:1] objectForKey:@"long_name"]];
+                    [selectedAnnotation setTitle:[NSString stringWithFormat:@"%@ %@",[(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"],[(NSDictionary *)[address_components objectAtIndex:1] objectForKey:@"long_name"]]];
+                }else if([address_components count] > 1) {
+                    
+                    [self setAddress1:[(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"]];
+                    [self setAddress2:@""];
+                    [selectedAnnotation setTitle:[NSString stringWithFormat:@"%@",[(NSDictionary *)[address_components objectAtIndex:0] objectForKey:@"long_name"]]];
+                }else{
+                    [selectedAnnotation setTitle:@"Unknown"];
+                }
+                //[selectedAnnotation setSubtitle:[NSString stringWithFormat:@"%f,%f",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude]];
+            }else{
+                [selectedAnnotation setTitle:@"Unknown"];
+            }
         }
-        // change textView text        
-        //textView.text = [NSString stringWithFormat:@"Latitude:%@\nLongitude:%@", [latlng objectForKey:@"lat"],[latlng objectForKey:@"lng"]];
     }
     
     
@@ -206,7 +338,7 @@
 
 - (void)addPoint
 {
-    selectedAnnotation = [[[CurrentLocationAnnotation alloc] initWithCoordinate:self.currentLocation.coordinate addressDictionary:nil] autorelease];
+    //selectedAnnotation = [[[CurrentLocationAnnotation alloc] initWithCoordinate:self.currentLocation.coordinate addressDictionary:nil] autorelease];
     //	annotation.title = [[NSString alloc] initWithFormat:@"%d", [mvMapView.annotations count] + 1];
     //	annotation.subtitle = @"Drag pin to set poisition.";
     //    
@@ -280,8 +412,8 @@
     [customBarItem2 release];
     
     
-    
-    [mvMapView setMapType:MKMapTypeHybrid];
+    mapAnnotations = [[NSMutableArray alloc] init];
+    [mvMapView setMapType:MKMapTypeStandard];
 	[mvMapView setDelegate:self];
     
 	locationManager = [[CLLocationManager alloc] init];
@@ -300,11 +432,17 @@
     
     [locationManager startUpdatingLocation];
 
+    
+    [self getAllPin];
+    
 }
 
 
 - (void)viewDidUnload
 {
+    [self setAddress2:nil];
+    [self setAddress1:nil];
+    [self setMapAnnotations:nil];
     [self setMvMapView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -313,6 +451,9 @@
 
 - (void)dealloc
 {
+    [address2 release];
+    [address1 release];
+    [mapAnnotations release];
     [mvMapView release];
     [super dealloc];
 }
@@ -346,15 +487,38 @@
     }];
 }
 
+- (void)getAllPin
+{
+    NSString *_url = [NSString stringWithFormat:@"http://www.appspheregroup.com/flood/getallpin.php"];
+    NSString *_fixedURL = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)_url, NULL, NULL, kCFStringEncodingUTF8);
+    
+    
+    // initiate request
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:_fixedURL]];
+    [request setDelegate:self];
+    [request startAsynchronous];
+    [request setTag:414];
+    
+    // add HUD
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Loading";
+    
+}
+
 - (IBAction)cancleAdd:(UIButton*)sender {
     
     //#Tong Please remove the pin here
+    [mvMapView removeAnnotation:selectedAnnotation];
+    
     
     [self hideSubMenu];
 }
 
 - (IBAction)submitAdd:(UIButton*)sender {
     Tab1AddViewController *addViewController = [[Tab1AddViewController alloc] initWithNibName:@"Tab1AddViewController" bundle:nil];
+    [addViewController setSelectedAnnotation:selectedAnnotation];
+    [addViewController setAddress1:address1];
+    [addViewController setAddress2:address2];
     [self.navigationController pushViewController:addViewController animated:YES];
     [addViewController release];
     [self hideSubMenu];

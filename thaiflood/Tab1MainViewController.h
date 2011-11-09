@@ -17,12 +17,20 @@
     CLLocationManager *locationManager;
     CLLocation *currentLocation;
     CurrentLocationAnnotation *selectedAnnotation;
+    NSMutableArray *mapAnnotations;
+    NSString *address1;
+    NSString *address2;
 }
 
-@property (nonatomic, retain) IBOutlet MKMapView *mvMapView;
-@property (nonatomic, retain) CLLocationManager *locationManager;
-@property (nonatomic, retain) CLLocation *currentLocation;
+@property (nonatomic, strong) IBOutlet MKMapView *mvMapView;
+@property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) CLLocation *currentLocation;
+@property (nonatomic, strong) NSMutableArray *mapAnnotations;
+@property (retain, nonatomic) IBOutlet NSString *address1;
+@property (retain, nonatomic) IBOutlet NSString *address2;
+
 - (IBAction)cancleAdd:(UIButton*)sender;
 - (IBAction)submitAdd:(UIButton*)sender;
+- (void)getAllPin;
 
 @end

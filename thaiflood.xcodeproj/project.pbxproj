@@ -348,7 +348,6 @@
 		4516F7EA145EC7BD00699725 /* Tab3DetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tab3DetailTableViewCell.xib; sourceTree = "<group>"; };
 		4516F7F0145EC95D00699725 /* Tab3DetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab3DetailTableViewCell.h; sourceTree = "<group>"; };
 		4516F7F1145EC95D00699725 /* Tab3DetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab3DetailTableViewCell.m; sourceTree = "<group>"; };
-		453BB0F114611F500030F83F /* AnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnnotationView.h; sourceTree = "<group>"; };
 		453BB0F214611F500030F83F /* AnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnnotationView.m; sourceTree = "<group>"; };
 		453BB0F314611F500030F83F /* CurrentLocationAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentLocationAnnotation.h; sourceTree = "<group>"; };
 		453BB0F414611F500030F83F /* CurrentLocationAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentLocationAnnotation.m; sourceTree = "<group>"; };
@@ -448,6 +447,7 @@
 		453CD488145DEE6B00F29612 /* setting_text_share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting_text_share@2x.png"; sourceTree = "<group>"; };
 		453CD489145DEE6C00F29612 /* setting_twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setting_twitter.png; sourceTree = "<group>"; };
 		453CD48A145DEE6C00F29612 /* setting_twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting_twitter@2x.png"; sourceTree = "<group>"; };
+		45535A48146AAAF500F1D7CA /* AnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnnotationView.h; sourceTree = "<group>"; };
 		4583E7B2146A7FF300F16FC0 /* Tab1PinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab1PinViewController.h; sourceTree = "<group>"; };
 		4583E7B3146A7FF300F16FC0 /* Tab1PinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab1PinViewController.m; sourceTree = "<group>"; };
 		4583E7B4146A7FF300F16FC0 /* Tab1PinViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tab1PinViewController.xib; sourceTree = "<group>"; };
@@ -665,7 +665,7 @@
 		453BB0F014611F500030F83F /* Annotation */ = {
 			isa = PBXGroup;
 			children = (
-				453BB0F114611F500030F83F /* AnnotationView.h */,
+				45535A48146AAAF500F1D7CA /* AnnotationView.h */,
 				453BB0F214611F500030F83F /* AnnotationView.m */,
 				453BB0F314611F500030F83F /* CurrentLocationAnnotation.h */,
 				453BB0F414611F500030F83F /* CurrentLocationAnnotation.m */,
@@ -676,7 +676,6 @@
 		453CD3F2145D9B6E00F29612 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				453BB0F014611F500030F83F /* Annotation */,
 				45149F781463A717003311F8 /* Social.h */,
 				45149F791463A717003311F8 /* Social.m */,
 				4583E7EB146A942D00F16FC0 /* Tab1PinTableViewCell.h */,
@@ -730,6 +729,7 @@
 		453CD3F4145D9B8E00F29612 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				453BB0F014611F500030F83F /* Annotation */,
 				453CD446145DC8C600F29612 /* Tab1MainViewController.h */,
 				453CD447145DC8C600F29612 /* Tab1MainViewController.m */,
 				45F8F87F145FE92200E4C9D9 /* Tab1AddViewController.h */,
