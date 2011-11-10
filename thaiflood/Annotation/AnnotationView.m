@@ -26,13 +26,19 @@
 
 - (id)initWithAnnotation:(id <MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
 	
-	self.hasBuiltInDraggingSupport = [[MKAnnotationView class] instancesRespondToSelector:NSSelectorFromString(@"isDraggable")];
+	//self.hasBuiltInDraggingSupport = [[MKAnnotationView class] instancesRespondToSelector:NSSelectorFromString(@"isDraggable")];
 	
-	if (self.hasBuiltInDraggingSupport) {
+	//if (self.hasBuiltInDraggingSupport) {
 		if ((self = (AnnotationView*)[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier])) {
-			[self performSelector:NSSelectorFromString(@"setDraggable:") withObject:[NSNumber numberWithBool:YES]];
+			//[self performSelector:NSSelectorFromString(@"setDraggable:") withObject:[NSNumber numberWithBool:YES]];
 		}
-	}
+	//}
+    UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+    self.image = pinImage;
+    //self.frame = CGRectMake(self.frame.origin.x-50, self.frame.origin.y-50, self.frame.size.width, self.frame.size.height);
+    //self.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    //self.canShowCallout = YES;
+    self.draggable = YES;
 	self.canShowCallout = YES;
 	
 	return self;
