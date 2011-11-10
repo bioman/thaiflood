@@ -83,19 +83,48 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 #pragma mark -
 #pragma mark Map Kit
 - (void) mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
-    CGRect visibleRect = [mapView annotationVisibleRect]; 
-    for (MKAnnotationView *view in views) {
-        CGRect endFrame = view.frame;
-        CGRect startFrame = endFrame; startFrame.origin.y = visibleRect.origin.y - startFrame.size.height;
-        view.frame = startFrame;
+    MKAnnotationView *aV; 
+    
+    for (aV in views) {
         
-        [UIView beginAnimations:@"drop" context:NULL]; 
-        [UIView setAnimationDuration:1];
+        // Don't pin drop if annotation is user location
+        if ([aV.annotation isKindOfClass:[MKUserLocation class]]) {
+            continue;
+        }
         
-        view.frame = endFrame;
+        // Check if current annotation is inside visible map rect, else go to next one
+        MKMapPoint point =  MKMapPointForCoordinate(aV.annotation.coordinate);
+        if (!MKMapRectContainsPoint(mapView.visibleMapRect, point)) {
+            continue;
+        }
         
-        [UIView commitAnimations];
+        CGRect endFrame = aV.frame;
+        
+        // Move annotation out of view
+        aV.frame = CGRectMake(aV.frame.origin.x, aV.frame.origin.y - self.view.frame.size.height, aV.frame.size.width, aV.frame.size.height);
+        
+        // Animate drop
+        [UIView animateWithDuration:0.5 delay:0.04*[views indexOfObject:aV] options:UIViewAnimationCurveLinear animations:^{
+            
+            aV.frame = endFrame;
+            
+            // Animate squash
+        }completion:^(BOOL finished){
+            if (finished) {
+                [UIView animateWithDuration:0.05 animations:^{
+                    aV.transform = CGAffineTransformMakeScale(1.0, 0.8);
+                    
+                }completion:^(BOOL finished){
+                    if (finished) {
+                        [UIView animateWithDuration:0.1 animations:^{
+                            aV.transform = CGAffineTransformIdentity;
+                        }];
+                    }
+                }];
+            }
+        }];
     }
+    
 }
 
 
@@ -274,7 +303,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
             // create dictionary from JSON text
             NSArray *responseArray = [responseString JSONValue];
             
-            
+            [mvMapView removeAnnotations:mapAnnotations];
             [mapAnnotations removeAllObjects];
             
             //NSArray *results = (NSArray *)[responseDict objectForKey:@"results"];
@@ -382,6 +411,9 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     
 	[mvMapView addAnnotation:selectedAnnotation];
     
+    
+    [mvMapView setRegion:MKCoordinateRegionMake(CLLocationCoordinate2DMake(selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude), MKCoordinateSpanMake(0.001, 0.001)) animated:YES];
+    
     //Show sub-menu
     [self showSubMenu];
 }
@@ -452,10 +484,14 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     [locationManager startUpdatingLocation];
 
     
-    [self getAllPin];
+    
     
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self getAllPin];
+}
 
 - (void)viewDidUnload
 {
