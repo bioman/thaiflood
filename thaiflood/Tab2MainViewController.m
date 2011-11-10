@@ -10,7 +10,6 @@
 #import "Tab2TableViewCell.h"
 #import "Tab2DetailViewController.h"
 #import "MBProgressHUD.h"
-
 #import "SBJson.h"
 
 @interface Tab2MainViewController (Privated)
@@ -246,7 +245,7 @@
     [self makeRequestAnnoucement];
 }
 
-- (IBAction)makeRequestAnnoucement
+- (void)makeRequestAnnoucement
 {
     // The url to make the request to
     NSURL *annoucementURL = [NSURL URLWithString:@"http://www.appspheregroup.com/flood/getannoucement.php"];

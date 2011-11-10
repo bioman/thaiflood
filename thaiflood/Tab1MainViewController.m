@@ -218,8 +218,15 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 -(void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
     CurrentLocationAnnotation *_annotation = (CurrentLocationAnnotation *)view.annotation;
+    
+    NSMutableDictionary *_pinData = [[NSMutableDictionary alloc] init];
+    [_pinData setObject:_annotation.title forKey:@"title"];
+    [_pinData setObject:_annotation.tag forKey:@"id"];
+    [_pinData setObject:_annotation.latlong forKey:@"latlong"];
+    
     Tab1PinViewController *pinViewController = [[Tab1PinViewController alloc] initWithNibName:@"Tab1PinViewController" bundle:nil];
-    [pinViewController setAddressTitle:_annotation.title];
+    [pinViewController startViewData:_pinData];
+    [_pinData release];
     [self.navigationController pushViewController:pinViewController animated:YES];
     [pinViewController release];
 }
@@ -277,6 +284,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
                 NSLog(@"%@",[dict objectForKey:@"lat"]);
                 NSLog(@"%@",[dict objectForKey:@"lng"]);
                 NSLog(@"%@",[dict objectForKey:@"address1"]);
+                NSLog(@"%@",[NSString stringWithFormat:@"%@_%@",[dict objectForKey:@"lat"],[dict objectForKey:@"lng"]]);
                 NSString *addtitle = [dict objectForKey:@"address_custom"];
                 if ([addtitle isEqualToString:@""]) {
                     addtitle = [NSString stringWithFormat:@"%@ %@",[dict objectForKey:@"address1"],[dict objectForKey:@"address2"]];
@@ -291,6 +299,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
                 CurrentLocationAnnotation *theLocation = [[[CurrentLocationAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
                 [theLocation setTitle:addtitle];
                 [theLocation setSubtitle:[NSString stringWithFormat:@"%@,%@",[dict objectForKey:@"lat"],[dict objectForKey:@"lng"]]];
+                [theLocation setLatlong:[NSString stringWithFormat:@"%@_%@",[dict objectForKey:@"lat"],[dict objectForKey:@"lng"]]];
                 [theLocation setType:@"normal"];
                 [theLocation setTag:[dict objectForKey:@"pin_id"]];
                 [mapAnnotations addObject:theLocation];
@@ -299,7 +308,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
             [mvMapView addAnnotations:mapAnnotations];
             [mvMapView setDelegate:self];
             
-        }else{
+        }else if (request.tag == 515){
             NSString *responseString = [request responseString];
             NSLog(@"responseString = %@",responseString);
             // create dictionary from JSON text
@@ -333,6 +342,8 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
             }else{
                 [selectedAnnotation setTitle:@"Unknown"];
             }
+        }else if (request.tag == 616){
+            
         }
     }
     
@@ -360,6 +371,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     
     // initiate request
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:_fixedURL]];
+    [request setTag:515];
     [request setDelegate:self];
     [request startAsynchronous];
     

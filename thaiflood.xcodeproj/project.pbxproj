@@ -155,6 +155,7 @@
 		453CD496145DEE6C00F29612 /* setting_text_share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 453CD488145DEE6B00F29612 /* setting_text_share@2x.png */; };
 		453CD497145DEE6C00F29612 /* setting_twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 453CD489145DEE6C00F29612 /* setting_twitter.png */; };
 		453CD498145DEE6C00F29612 /* setting_twitter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 453CD48A145DEE6C00F29612 /* setting_twitter@2x.png */; };
+		457CF1FB146BD17500DFA04D /* Tab1LastedPinTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457CF1FA146BD17500DFA04D /* Tab1LastedPinTableViewCell.xib */; };
 		4583E7B5146A7FF300F16FC0 /* Tab1PinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4583E7B3146A7FF300F16FC0 /* Tab1PinViewController.m */; };
 		4583E7B6146A7FF300F16FC0 /* Tab1PinViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4583E7B4146A7FF300F16FC0 /* Tab1PinViewController.xib */; };
 		4583E7BA146A801100F16FC0 /* Tab1PinDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4583E7B8146A801100F16FC0 /* Tab1PinDetailViewController.m */; };
@@ -448,6 +449,7 @@
 		453CD489145DEE6C00F29612 /* setting_twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setting_twitter.png; sourceTree = "<group>"; };
 		453CD48A145DEE6C00F29612 /* setting_twitter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting_twitter@2x.png"; sourceTree = "<group>"; };
 		45535A48146AAAF500F1D7CA /* AnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnnotationView.h; sourceTree = "<group>"; };
+		457CF1FA146BD17500DFA04D /* Tab1LastedPinTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tab1LastedPinTableViewCell.xib; sourceTree = "<group>"; };
 		4583E7B2146A7FF300F16FC0 /* Tab1PinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tab1PinViewController.h; sourceTree = "<group>"; };
 		4583E7B3146A7FF300F16FC0 /* Tab1PinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab1PinViewController.m; sourceTree = "<group>"; };
 		4583E7B4146A7FF300F16FC0 /* Tab1PinViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Tab1PinViewController.xib; sourceTree = "<group>"; };
@@ -719,6 +721,7 @@
 				453CD44D145DC8FE00F29612 /* Tab3MainViewController.xib */,
 				4516F76C145E3B9F00699725 /* Tab3DetailViewController.xib */,
 				453CD457145DC95B00F29612 /* Tab4MainViewController.xib */,
+				457CF1FA146BD17500DFA04D /* Tab1LastedPinTableViewCell.xib */,
 				4583E7BC146A81EC00F16FC0 /* Tab1PinTableViewCell.xib */,
 				4516F773145E3DBD00699725 /* Tab2TableViewCell.xib */,
 				4516F7EA145EC7BD00699725 /* Tab3DetailTableViewCell.xib */,
@@ -1376,6 +1379,7 @@
 				4583E7E3146A8E2000F16FC0 /* water_level_07@2x.png in Resources */,
 				4583E7E4146A8E2000F16FC0 /* water_level_08.png in Resources */,
 				4583E7E5146A8E2000F16FC0 /* water_level_08@2x.png in Resources */,
+				457CF1FB146BD17500DFA04D /* Tab1LastedPinTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

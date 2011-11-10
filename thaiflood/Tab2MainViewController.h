@@ -21,6 +21,6 @@
 @property (nonatomic, retain) NSMutableArray *annoucementArray;
 
 //Custom Method
-- (IBAction)makeRequestAnnoucement;
+- (void)makeRequestAnnoucement;
 - (NSString *)dateDiff:(NSString *)origDate;
 @end

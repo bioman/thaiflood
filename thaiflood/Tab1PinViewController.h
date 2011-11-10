@@ -7,9 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ASIHTTPRequest.h"
 
-@interface Tab1PinViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface Tab1PinViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate>
+{
+    NSString *latlong;
+}
 
-@property (nonatomic, strong) NSString *addressTitle;
+@property (nonatomic, strong) NSMutableArray *details;
+@property (nonatomic, strong) NSString *latlong;
+
+- (void) startViewData:(NSDictionary*)data;
 
 @end

@@ -9,6 +9,7 @@
 #import "Tab1PinTableViewCell.h"
 
 @implementation Tab1PinTableViewCell
+@synthesize time, description, level, pic, request,loadingIndicator;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -25,5 +26,39 @@
 
     // Configure the view for the selected state
 }
+- (void)startLoading
+{
+    [loadingIndicator setHidden:NO];
+    [loadingIndicator startAnimating];
+}
 
+- (void)stopLoading
+{
+    [loadingIndicator stopAnimating];
+    [loadingIndicator setHidden:YES];
+}
+
+- (void)thumbnailFromURL:(NSURL*)url
+{
+    [self startLoading];
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
+    self.request = [ASIHTTPRequest requestWithURL:url];
+    [self.request setDelegate:self];
+    [self.request startAsynchronous];
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)_request
+{
+    NSData *responseData = [_request responseData];
+    [self.pic setImage:[UIImage imageWithData:responseData]];
+    [self stopLoading];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)_request
+{
+    //NSError *error = [request error];
+    [self stopLoading];
+}
 @end

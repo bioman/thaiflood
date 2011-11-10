@@ -14,6 +14,7 @@
 @synthesize title;
 @synthesize subtitle;
 @synthesize type, tag;
+@synthesize latlong;
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D)coord addressDictionary:(NSDictionary *)addressDictionary {
 	
