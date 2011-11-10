@@ -130,51 +130,82 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 
 - (MKAnnotationView *)mapView:(MKMapView *)MapView viewForAnnotation:(id <MKAnnotation>)annotation
 {
+    NSLog(@"viewForAnnotation");
+    
     //annotation 
 	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
 	MKAnnotationView *draggablePinView = [MapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
 	
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+        return draggablePinView;
+    
 	if (draggablePinView) {
         NSLog(@"old pin");
-		draggablePinView.annotation = annotation;
+        return draggablePinView;
+//		draggablePinView.annotation = annotation;
+//        UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+//        draggablePinView.image = pinImage;
+//        draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
+//        draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+//        draggablePinView.canShowCallout = YES;
+//        draggablePinView.draggable = NO;
 	} else {
-        if( ![[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"normal"] ) {
+        if( [[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"normal"] ) {
+            NSLog(@"normal pin");
             draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
             if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
                 ((AnnotationView *)draggablePinView).mapView = MapView;
             }
-            //UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
-            //draggablePinView.image = pinImage;
-            //draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
-            draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-            draggablePinView.canShowCallout = YES;
-            //draggablePinView.tag
-        }else{
-            
-            draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
-            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
-                ((AnnotationView *)draggablePinView).mapView = MapView;
-            }
-            //UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
-            //draggablePinView.image = pinImage;
-            //draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
+            UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+            draggablePinView.image = pinImage;
+            draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
             draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
             draggablePinView.canShowCallout = YES;
             draggablePinView.draggable = NO;
+        }else if ( [[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"new"] ){
+            NSLog(@"new pin");
+            draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
+            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
+                ((AnnotationView *)draggablePinView).mapView = MapView;
+            }
+            UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+            draggablePinView.image = pinImage;
+            draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
+            //draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            draggablePinView.canShowCallout = YES;
+            [draggablePinView setSelected:YES animated:YES];
+        }else{
+            NSLog(@"others pin");
+            draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
+            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
+                ((AnnotationView *)draggablePinView).mapView = MapView;
+            }
+            UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+            draggablePinView.image = pinImage;
+            draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
+            draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            draggablePinView.canShowCallout = YES;
+            //draggablePinView.tag
+
         }
-        [draggablePinView addObserver:self
-                  forKeyPath:@"selected"
-                     options:NSKeyValueObservingOptionNew
-                     context:GMAP_ANNOTATION_SELECTED];
+        return draggablePinView;
+//        [draggablePinView addObserver:self
+//                  forKeyPath:@"selected"
+//                     options:NSKeyValueObservingOptionNew
+//                     context:GMAP_ANNOTATION_SELECTED];
 	}
     //UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
     //draggablePinView.image = pinImage;
-	return draggablePinView;
+	return nil;
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
 {
+    
     if (oldState == MKAnnotationViewDragStateDragging) {
+
+        
+        
         selectedAnnotation = (CurrentLocationAnnotation *)annotationView.annotation;
         
         NSString *_url = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f2&language=th&sensor=false", selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude];
@@ -183,6 +214,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
         
         // initiate request
         ASIFormDataRequest *request2 = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:_fixedURL]];
+        [request2 setTag:515];
         [request2 setDelegate:self];
         [request2 startAsynchronous];
         
@@ -226,6 +258,11 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 {
     NSLog(@"didDeselectAnnotationView");
     //view.image = [UIImage imageNamed:@"pin.png"];
+    UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+    view.image = pinImage;
+    view.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    view.canShowCallout = YES;
+    view.draggable = NO;
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
@@ -235,6 +272,12 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     //view.image = [UIImage imageNamed:@"pin.png"];
     //[mapView addAnnotation:yourAnnotation];
     //This will call viewForAnnotation again
+    UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+    view.image = pinImage;
+    view.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    view.canShowCallout = YES;
+    view.draggable = NO;
+    
 }
 
 //-(MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id)overlay{
@@ -303,7 +346,6 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
             // create dictionary from JSON text
             NSArray *responseArray = [responseString JSONValue];
             
-            [mvMapView removeAnnotations:mapAnnotations];
             [mapAnnotations removeAllObjects];
             
             //NSArray *results = (NSArray *)[responseDict objectForKey:@"results"];
@@ -396,7 +438,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     
     NSString *_url = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f2&language=th&sensor=false", selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude];
     NSString *_fixedURL = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)_url, NULL, NULL, kCFStringEncodingUTF8);
-    
+    [selectedAnnotation setType:@"new"];
     
     // initiate request
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:_fixedURL]];
@@ -490,6 +532,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [mvMapView removeAnnotations:[mvMapView annotations]]; 
     [self getAllPin];
 }
 
