@@ -317,13 +317,13 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void) uploadImage
+- (void) uploadPin
 {
     NSLog(@"uploadImage");
     NSString *_url = [NSString stringWithString:@"http://appspheregroup.com/flood/addpin.php"];
     ASIFormDataRequest *request2 = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:_url]];
     NSLog(@"selectedAnnotation %f %f",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude);
-    [request2 setPostValue:[NSString stringWithFormat:@"[{\"lat\":%f,\"lng\":%f,\"address1\":\"%@\",\"address2\":\"%@\",\"pin_type\":1,\"created_by\":0,\"description\":\"%@\",\"water_level\":%i}]",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude,address1,address2,descriptionTextView .text,water_level] forKey:@"data"];
+    [request2 setPostValue:[NSString stringWithFormat:@"[{\"lat\":%f,\"lng\":%f,\"address1\":\"%@\",\"address2\":\"%@\",\"address_custom\":\"%@\",\"pin_type\":1,\"created_by\":0,\"description\":\"%@\",\"water_level\":%i}]",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude,address1,address2,@"",descriptionTextView .text,water_level] forKey:@"data"];
     [request2 setPostValue:[NSString stringWithFormat:@"%f",selectedAnnotation.coordinate.latitude] forKey:@"latitude"];
     [request2 setPostValue:[NSString stringWithFormat:@"%f",selectedAnnotation.coordinate.longitude] forKey:@"longitude"];
     
@@ -361,7 +361,7 @@
     //    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:_fixedURL]];
     //    [[NSURLConnection alloc] initWithRequest:request delegate:self];
     
-    [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(uploadImage) userInfo:nil repeats:NO];
+    [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(uploadPin) userInfo:nil repeats:NO];
     
 }
 

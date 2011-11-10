@@ -3,7 +3,7 @@
 //  thaiflood
 //
 //  Created by Sunchai Pitakchonlasup on 10/31/54 BE.
-//  Copyright (c) 2554 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2554 Appsphere Group Co.,Ltd. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>
@@ -13,6 +13,7 @@
 #import "ASIFormDataRequest.h"
 #import "MBProgressHUD.h"
 #import "Tab1AddViewController.h"
+#import "Tab1PinViewController.h"
 #import "SBJson.h"
 
 
@@ -216,10 +217,11 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 
 -(void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    
-//    DetailViewController *detailViewController = [[DetailViewController alloc] initWithCurrentAnnotation:selectedAnnotation];
-//    [self.navigationController pushViewController:detailViewController animated:YES];
-//    [detailViewController release];
+    CurrentLocationAnnotation *_annotation = (CurrentLocationAnnotation *)view.annotation;
+    Tab1PinViewController *pinViewController = [[Tab1PinViewController alloc] initWithNibName:@"Tab1PinViewController" bundle:nil];
+    [pinViewController setAddressTitle:_annotation.title];
+    [self.navigationController pushViewController:pinViewController animated:YES];
+    [pinViewController release];
 }
 
 #pragma mark - NSURLConnection Delegate
@@ -275,6 +277,10 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
                 NSLog(@"%@",[dict objectForKey:@"lat"]);
                 NSLog(@"%@",[dict objectForKey:@"lng"]);
                 NSLog(@"%@",[dict objectForKey:@"address1"]);
+                NSString *addtitle = [dict objectForKey:@"address_custom"];
+                if ([addtitle isEqualToString:@""]) {
+                    addtitle = [NSString stringWithFormat:@"%@ %@",[dict objectForKey:@"address1"],[dict objectForKey:@"address2"]];
+                }
             
                 CLLocationCoordinate2D theCoordinate;
                 double latitude = [[dict objectForKey:@"lat"] doubleValue];
@@ -283,9 +289,10 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
                 theCoordinate.longitude = longitude;
                 
                 CurrentLocationAnnotation *theLocation = [[[CurrentLocationAnnotation alloc] initWithCoordinate:theCoordinate addressDictionary:nil] autorelease];
-                [theLocation setTitle:[NSString stringWithFormat:@"%@ %@",[dict objectForKey:@"address1"],[dict objectForKey:@"address2"]]];
+                [theLocation setTitle:addtitle];
                 [theLocation setSubtitle:[NSString stringWithFormat:@"%@,%@",[dict objectForKey:@"lat"],[dict objectForKey:@"lng"]]];
                 [theLocation setType:@"normal"];
+                [theLocation setTag:[dict objectForKey:@"pin_id"]];
                 [mapAnnotations addObject:theLocation];
                 
             }

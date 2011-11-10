@@ -11,6 +11,7 @@
 #import "Tab1PinTableViewCell.h"
 
 @implementation Tab1PinViewController
+@synthesize addressTitle;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,8 +36,6 @@
 {
     [super viewDidLoad];
     
-    [self.navigationItem setTitle:@"Location"];
-    
     UIImage *buttonImage = [UIImage imageNamed:@"button_back.png"];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button addTarget:self action:@selector(backToMain) forControlEvents:UIControlEventTouchUpInside];
@@ -53,6 +52,13 @@
     newShadow.frame = CGRectMake(0,navigationBarBottom, self.view.frame.size.width, 3);
     newShadow.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
     [self.view.layer addSublayer:newShadow];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self.navigationItem setTitle:self.addressTitle];
 }
 
 - (void)viewDidUnload

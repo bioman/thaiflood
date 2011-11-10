@@ -10,4 +10,6 @@
 
 @interface Tab1PinViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, strong) NSString *addressTitle;
+
 @end
