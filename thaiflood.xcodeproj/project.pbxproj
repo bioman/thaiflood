@@ -276,6 +276,8 @@
 		CAE68F2D14600A9400CA766D /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CAE68F2B14600A9400CA766D /* libxml2.dylib */; };
 		CAE68F2E14600A9400CA766D /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CAE68F2C14600A9400CA766D /* libz.dylib */; };
 		CAE68F3114600B4000CA766D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CAE68F3014600B4000CA766D /* MBProgressHUD.m */; };
+		CAF3B9D4146CCC9A001BEBAC /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = CAF3B9D2146CCC9A001BEBAC /* pin.png */; };
+		CAF3B9D5146CCC9A001BEBAC /* pin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CAF3B9D3146CCC9A001BEBAC /* pin@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -625,6 +627,8 @@
 		CAE68F2C14600A9400CA766D /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		CAE68F2F14600B4000CA766D /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		CAE68F3014600B4000CA766D /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		CAF3B9D2146CCC9A001BEBAC /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
+		CAF3B9D3146CCC9A001BEBAC /* pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -802,6 +806,8 @@
 				453CD460145DDEBF00F29612 /* button_refresh@2x.png */,
 				45F8F84E145FD3D100E4C9D9 /* button_search.png */,
 				45F8F84F145FD3D100E4C9D9 /* button_search@2x.png */,
+				CAF3B9D2146CCC9A001BEBAC /* pin.png */,
+				CAF3B9D3146CCC9A001BEBAC /* pin@2x.png */,
 				453BB11F1461626A0030F83F /* button_submit.png */,
 				453BB1201461626A0030F83F /* button_submit@2x.png */,
 				45EAB7621466FBAE001D2B3A /* frame_share.png */,
