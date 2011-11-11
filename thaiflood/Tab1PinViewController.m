@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Tab1PinViewController.h"
 #import "Tab1PinTableViewCell.h"
+#import "Tab1PinDetailViewController.h"
 #import "MBProgressHUD.h"
 #import "SBJson.h"
 
@@ -51,6 +52,15 @@
     UIBarButtonItem *customBarItem = [[UIBarButtonItem alloc] initWithCustomView:button];
     [self.navigationItem setLeftBarButtonItem:customBarItem];
     [customBarItem release];
+    
+    UIImage *buttonImage2 = [UIImage imageNamed:@"button_add.png"];
+    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button2 setImage:buttonImage2 forState:UIControlStateNormal];
+    [button2 addTarget:self action:@selector(addDetail) forControlEvents:UIControlEventTouchUpInside];
+    button2.frame = CGRectMake(0, 0, buttonImage2.size.width, buttonImage2.size.height);
+    UIBarButtonItem *customBarItem2 = [[UIBarButtonItem alloc] initWithCustomView:button2];
+    [self.navigationItem setRightBarButtonItem:customBarItem2];
+    [customBarItem2 release];
     
     CGColorRef darkColor = [[UIColor blackColor] colorWithAlphaComponent:.3f].CGColor;
     CGColorRef lightColor = [UIColor clearColor].CGColor;
@@ -168,23 +178,28 @@
 			}
 		}
 	}
-    NSDictionary *_dic = [details objectAtIndex:indexPath.row];
+    NSInteger _index = indexPath.row;
+    if (indexPath.section == 1) {
+        _index++;
+    }
+    NSDictionary *_dic = [details objectAtIndex:_index];
     [cell.time setText:[self dateDiff:[_dic objectForKey:@"created_date"]]];
     [cell.description setText:[_dic objectForKey:@"description"]];
     [cell.level setImage:[UIImage imageNamed:[NSString stringWithFormat:@"water_level_0%d.png",[[_dic objectForKey:@"water_level"] intValue]]]];
+    NSString *_url = [_dic objectForKey:@"pic_path"];
     if (indexPath.section == 0) {
-        NSString *_url;
-        NSLog(@"pic_path :/%@/", [_dic objectForKey:@"pic_path"]);
-        if (![[_dic objectForKey:@"pic_path"] isEqualToString:@""]) {
-            _url = [NSString stringWithFormat:@"http://www.appspheregroup.com/flood/picture/%@/%@",latlong,[_dic objectForKey:@"pic_path"]];
-        }else{
-            NSString *_tmplatlong = [latlong stringByReplacingOccurrencesOfString:@"_" withString:@","];
-            _url = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%@&zoom=15&size=200x200&markers=%@&sensor=false",_tmplatlong,_tmplatlong];
-        }
-        
-        NSLog(@"A URL: %@", _url);
-        //[cell.pic setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_url]]]];
+        NSLog(@"URL: %@",_url);
         [cell thumbnailFromURL:[NSURL URLWithString:_url]];
+    }else{
+        NSRange textRange;
+        textRange =[_url rangeOfString:@"googleapis"];
+        if(textRange.location == NSNotFound)
+        {
+            NSLog(@"AA");
+            [cell showCamera:YES];
+        }else{
+            [cell showCamera:NO];
+        }
     }
 //    NSLog(@"%@",[NSString stringWithFormat:@"%@",[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/picture/%@/%@",latlong,[_dic objectForKey:@"pic_path"]]]);
     return cell;
@@ -196,6 +211,36 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    NSDictionary *_dic = [details objectAtIndex:indexPath.row];
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *convertedDate = [df dateFromString:[_dic objectForKey:@"created_date"]];
+    [df release];
+    df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"d MMMM yyyy"];
+    NSString *_date = [df stringFromDate:convertedDate];
+    [df release];
+    df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"hh:mm a"];
+    NSString *_time = [df stringFromDate:convertedDate];
+    [df release];
+    
+    NSMutableDictionary *_pinData = [[NSMutableDictionary alloc] init];
+    [_pinData setObject:[self dateDiff:[_dic objectForKey:@"created_date"]] forKey:@"date_diff"];
+    [_pinData setObject:_date forKey:@"date"]; NSLog(@"_date %@", _date);
+    [_pinData setObject:_time forKey:@"time"];
+    [_pinData setObject:[_dic objectForKey:@"water_level"] forKey:@"level"];
+    [_pinData setObject:[_dic objectForKey:@"description"] forKey:@"description"];
+    
+    Tab1PinDetailViewController *detailViewController = [[Tab1PinDetailViewController alloc] initWithNibName:@"Tab1PinDetailViewController" bundle:nil];
+    [detailViewController startViewData:_pinData];
+    [self.navigationController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
+    [_pinData release];
 }
 
 #pragma mark ASIHTTPRequest Delegate
@@ -258,6 +303,11 @@
     } else {
         return @"never";
     }   
+}
+
+- (void)addDetail
+{
+    
 }
 
 @end

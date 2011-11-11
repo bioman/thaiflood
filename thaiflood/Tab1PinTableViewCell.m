@@ -62,6 +62,16 @@
     [self stopLoading];
 }
 
+- (void)showCamera:(BOOL)flag
+{
+    if (flag) {
+        [camera setHidden:NO];
+    }else{
+        [camera setHidden:YES];
+    }
+    
+}
+
 - (void)dealloc {
     [self.request setDelegate:nil];
     [self.request cancel];

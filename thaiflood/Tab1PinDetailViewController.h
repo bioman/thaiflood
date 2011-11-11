@@ -9,5 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @interface Tab1PinDetailViewController : UIViewController
-
+{
+    IBOutlet UILabel *dateLabel;
+    IBOutlet UILabel *timediffLabel;
+    IBOutlet UILabel *timeLabel;
+    IBOutlet UITextView *descriptionLabel;
+    IBOutlet UIImageView *levelImage;
+}
+@property (nonatomic, strong) NSDictionary *details;
+- (void) startViewData:(NSDictionary*)data;
 @end

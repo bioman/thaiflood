@@ -15,6 +15,7 @@
     IBOutlet UILabel *description;
     IBOutlet UIImageView *level;
     IBOutlet UIImageView *pic;
+    IBOutlet UIImageView *camera;
     ASIHTTPRequest *request;
 }
 
@@ -28,4 +29,5 @@
 - (void)startLoading;
 - (void)stopLoading;
 - (void)thumbnailFromURL:(NSURL*)url;
+- (void)showCamera:(BOOL)flag;
 @end
