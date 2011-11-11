@@ -61,4 +61,16 @@
     //NSError *error = [request error];
     [self stopLoading];
 }
+
+- (void)dealloc {
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
+    [time release];
+    [level release];
+    [description release];
+    [loadingIndicator release];
+    [pic release];
+    [super dealloc];
+}
 @end

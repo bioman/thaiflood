@@ -123,7 +123,11 @@
     if (section == 0) {
         return @"Lasted Update";
     }else{
-        return @"Past Update";
+        if ([self.details count] - 1 == 0) {
+            return @"";
+        }else{
+            return @"Past Update";
+        }
     }
 }
 
@@ -139,7 +143,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        return 260;
+        return 270;
     }else{
         return 99;
     }
@@ -169,9 +173,18 @@
     [cell.description setText:[_dic objectForKey:@"description"]];
     [cell.level setImage:[UIImage imageNamed:[NSString stringWithFormat:@"water_level_0%d.png",[[_dic objectForKey:@"water_level"] intValue]]]];
     if (indexPath.section == 0) {
-        NSString *_url = [NSString stringWithFormat:@"http://www.appspheregroup.com/flood/picture/%@/%@",latlong,[_dic objectForKey:@"pic_path"]];
-        NSLog(@"URL: %@", _url);
-        [cell.pic setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_url]]]];
+        NSString *_url;
+        NSLog(@"pic_path :/%@/", [_dic objectForKey:@"pic_path"]);
+        if (![[_dic objectForKey:@"pic_path"] isEqualToString:@""]) {
+            _url = [NSString stringWithFormat:@"http://www.appspheregroup.com/flood/picture/%@/%@",latlong,[_dic objectForKey:@"pic_path"]];
+        }else{
+            NSString *_tmplatlong = [latlong stringByReplacingOccurrencesOfString:@"_" withString:@","];
+            _url = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/staticmap?center=%@&zoom=15&size=200x200&markers=%@&sensor=false",_tmplatlong,_tmplatlong];
+        }
+        
+        NSLog(@"A URL: %@", _url);
+        //[cell.pic setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:_url]]]];
+        [cell thumbnailFromURL:[NSURL URLWithString:_url]];
     }
 //    NSLog(@"%@",[NSString stringWithFormat:@"%@",[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/picture/%@/%@",latlong,[_dic objectForKey:@"pic_path"]]]);
     return cell;
