@@ -233,6 +233,7 @@
     [df release];
     
     NSMutableDictionary *_pinData = [[NSMutableDictionary alloc] init];
+    [_pinData setObject:self.navigationItem.title forKey:@"title"];
     [_pinData setObject:[self dateDiff:[_dic objectForKey:@"created_date"]] forKey:@"date_diff"];
     [_pinData setObject:_date forKey:@"date"]; NSLog(@"_date %@", _date);
     [_pinData setObject:_time forKey:@"time"];

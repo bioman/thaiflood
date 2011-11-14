@@ -8,6 +8,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "Tab1PinDetailViewController.h"
+#import "Tab2ShareFacebookViewController.h"
+#import "Tab2ShareTwitterViewController.h"
 
 @implementation Tab1PinDetailViewController
 @synthesize details, request;
@@ -55,10 +57,11 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [self.navigationItem setTitle:[details objectForKey:@"date_diff"]];
+    [self.navigationItem setTitle:[details objectForKey:@"title"]];
     [dateLabel setText:[details objectForKey:@"date"]];
     [timeLabel setText:[details objectForKey:@"time"]];
     [timediffLabel setText:[details objectForKey:@"date_diff"]];
+    [levelImage setImage:[UIImage imageNamed:[NSString stringWithFormat:@"water_level_0%d.png",[[details objectForKey:@"level"] intValue]]]];
     NSString *_urlStr = [details objectForKey:@"pic"];
     NSRange textRange = [_urlStr rangeOfString:@"googleapis"];
     if(textRange.location == NSNotFound)
@@ -132,7 +135,7 @@
     [super dealloc];
 }
 
-#pragma mark Request
+#pragma mark - Request
 - (void)requestFinished:(ASIHTTPRequest *)_request
 {
     NSData *responseData = [_request responseData];
@@ -155,5 +158,51 @@
 - (void)requestFailed:(ASIHTTPRequest *)_request
 {
     //NSError *error = [request error];
+}
+
+#pragma mark - Share
+- (IBAction)shareFacebook:(id)sender {
+    Tab2ShareFacebookViewController *detailViewController = [[Tab2ShareFacebookViewController alloc] initWithNibName:@"Tab2ShareFacebookViewController" bundle:nil];
+    
+    //Set up share object
+    NSMutableDictionary *_shareObject = [[NSMutableDictionary alloc] init];
+    [_shareObject setObject:[details objectForKey:@"title"] forKey:@"title"];
+    [_shareObject setObject:[details objectForKey:@"description"] forKey:@"description"];
+    NSRange textRange = [[details objectForKey:@"pic"] rangeOfString:@"googleapis"];
+    if(textRange.location == NSNotFound)
+    {
+        [_shareObject setObject:[details objectForKey:@"pic"] forKey:@"picture"];
+    }else{
+        [_shareObject setObject:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/images/water_level_%@.png",[details objectForKey:@"level"]] forKey:@"picture"];
+    }
+    NSLog(@"picture %@",[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/images/water_level_%@.png",[details objectForKey:@"level"]]);
+    [_shareObject setObject:@"Flood Update" forKey:@"type"];
+    [detailViewController setShareDetail:_shareObject];
+    [_shareObject release];
+    
+    [self.navigationController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
+}
+
+- (IBAction)shareTwitter:(id)sender {
+    Tab2ShareTwitterViewController *detailViewController = [[Tab2ShareTwitterViewController alloc] initWithNibName:@"Tab2ShareTwitterViewController" bundle:nil];
+    
+    //Set up share object
+    NSMutableDictionary *_shareObject = [[NSMutableDictionary alloc] init];
+    [_shareObject setObject:[details objectForKey:@"title"] forKey:@"title"];
+    [_shareObject setObject:[details objectForKey:@"description"] forKey:@"description"];
+    NSRange textRange = [[details objectForKey:@"pic"] rangeOfString:@"googleapis"];
+    if(textRange.location == NSNotFound)
+    {
+        [_shareObject setObject:[details objectForKey:@"pic"] forKey:@"picture"];
+    }else{
+        [_shareObject setObject:[NSString stringWithFormat:@"http://www.appspheregroup.com/flood/images/water_level_%@.png",[details objectForKey:@"level"]] forKey:@"picture"];
+    }
+    [_shareObject setObject:@"Flood Update" forKey:@"type"];
+    [detailViewController setShareDetail:_shareObject];
+    [_shareObject release];
+    
+    [self.navigationController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
 }
 @end

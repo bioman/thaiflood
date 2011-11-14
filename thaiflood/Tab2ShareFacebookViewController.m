@@ -74,22 +74,38 @@
     newShadow.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
     [self.view.layer addSublayer:newShadow];
     
-    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n%@",[NSString stringWithFormat:@"%@...", [[shareDetail objectForKey:@"description"] substringToIndex:50]]]];
     [((UILabel*)[self getView:TAG_TITLE_BOX]) setText:[shareDetail objectForKey:@"title"]];
-    UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    [_loadingView setTag:66];
-    [_loadingView setFrame:CGRectMake(140, 60, 20, 20)];
-    [_loadingView startAnimating];
-    [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) addSubview:_loadingView];
-    [_loadingView release];
     
-    [self.request setDelegate:nil];
-    [self.request cancel];
-    [self.request release];
-    NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[shareDetail objectForKey:@"picture"]]];
-    self.request = [ASIHTTPRequest requestWithURL:_url];
-    [self.request setDelegate:self];
-    [self.request startAsynchronous];
+    NSString *_newline = @"\n\n\n\n\n\n\n\n";
+    NSRange textRange = [[shareDetail objectForKey:@"picture"] rangeOfString:@"water_level"];
+    if(textRange.location == NSNotFound)
+    {
+        UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        [_loadingView setTag:66];
+        [_loadingView setFrame:CGRectMake(140, 60, 20, 20)];
+        [_loadingView startAnimating];
+        [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) addSubview:_loadingView];
+        [_loadingView release];
+        
+        [self.request setDelegate:nil];
+        [self.request cancel];
+        [self.request release];
+        NSURL *_url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[shareDetail objectForKey:@"picture"]]];
+        self.request = [ASIHTTPRequest requestWithURL:_url];
+        [self.request setDelegate:self];
+        [self.request startAsynchronous];
+    }else{
+        _newline = @"";
+    }
+    
+    NSString *_substr = [shareDetail objectForKey:@"description"];
+    if ([[shareDetail objectForKey:@"description"] length] > 50) {
+        _substr = [[shareDetail objectForKey:@"description"] substringToIndex:50];
+        [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) setText:[NSString stringWithFormat:@"%@%@", _newline, [NSString stringWithFormat:@"%@...", _substr]]];
+    }else{
+        [((UITextView*)[self getView:TAG_DESCRIPTION_BOX]) setText:[NSString stringWithFormat:@"%@%@", _newline, [NSString stringWithFormat:@"%@", _substr]]];
+    }
+
 }
 
 - (UIView*)getView:(NSInteger)_tag
@@ -161,7 +177,9 @@
 
 -(void)dealloc
 {
-    [request release];
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
     [shareDetail release];
     [super dealloc];
 }
@@ -179,11 +197,15 @@
 
 - (void) postFacebook
 {
+    [[self getView:TAG_MESSAGE_BOX] resignFirstResponder];
+    [[self getView:TAG_DESCRIPTION_BOX] resignFirstResponder];
+    
     NSString *_title2 = [shareDetail objectForKey:@"title"];
     NSString *_type = [shareDetail objectForKey:@"type"];
     NSString *_message = ((UITextView*)[self getView:TAG_MESSAGE_BOX]).text;
     NSString *_description = [shareDetail objectForKey:@"description"];
     NSString *_image = [shareDetail objectForKey:@"picture"];
+    NSLog(@"image: %@",[shareDetail objectForKey:@"picture"]);
     
     // add HUD
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -204,13 +226,15 @@
     [[self getView:TAG_DESCRIPTION_BOX] resignFirstResponder];
 }
 
-#pragma mark Request
+#pragma mark - Request
 - (void)requestFinished:(ASIHTTPRequest *)_request
 {
     UITextView *_detailTextView = (UITextView*)[self getView:TAG_DESCRIPTION_BOX];
     NSData *responseData = [_request responseData];
     UIImageView *_pic = [[UIImageView alloc]initWithImage:[UIImage imageWithData:responseData]];
     [_pic setFrame:CGRectMake(62, 6, 175, 128)];
+    [_pic setClipsToBounds:YES];
+    [_pic setContentMode:UIViewContentModeScaleAspectFill];
     [_detailTextView addSubview:_pic];
     [_pic release];
     UIImageView *_border = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"map_border_big.png"]];
