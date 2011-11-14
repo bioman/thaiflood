@@ -10,7 +10,7 @@
 #import "Tab1PinDetailViewController.h"
 
 @implementation Tab1PinDetailViewController
-@synthesize details;
+@synthesize details, request;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -59,7 +59,31 @@
     [dateLabel setText:[details objectForKey:@"date"]];
     [timeLabel setText:[details objectForKey:@"time"]];
     [timediffLabel setText:[details objectForKey:@"date_diff"]];
-    [descriptionLabel setText:[details objectForKey:@"description"]];
+    NSString *_urlStr = [details objectForKey:@"pic"];
+    NSRange textRange = [_urlStr rangeOfString:@"googleapis"];
+    if(textRange.location == NSNotFound)
+    {
+        [descriptionLabel setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n\n\n\n\n%@",[details objectForKey:@"description"]]];
+        UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        [_loadingView setTag:66];
+        [_loadingView setFrame:CGRectMake(118, 102, 20, 20)];
+        [_loadingView startAnimating];
+        [descriptionLabel addSubview:_loadingView];
+        [_loadingView release];
+        
+        [self.request setDelegate:nil];
+        [self.request cancel];
+        [self.request release];
+        NSURL *_url = [NSURL URLWithString:_urlStr];
+        self.request = [ASIHTTPRequest requestWithURL:_url];
+        [self.request setDelegate:self];
+        [self.request startAsynchronous];
+    }else{
+        [descriptionLabel setText:[NSString stringWithFormat:@"%@",[details objectForKey:@"description"]]];
+    }
+    
+    
+    
 }
 
 - (void)viewDidUnload
@@ -96,6 +120,9 @@
 }
 
 - (void)dealloc {
+    [self.request setDelegate:nil];
+    [self.request cancel];
+    [self.request release];
     [details release];
     [dateLabel release];
     [timeLabel release];
@@ -103,5 +130,30 @@
     [timediffLabel release];
     [levelImage release];
     [super dealloc];
+}
+
+#pragma mark Request
+- (void)requestFinished:(ASIHTTPRequest *)_request
+{
+    NSData *responseData = [_request responseData];
+    UIImageView *_pic = [[UIImageView alloc]initWithImage:[UIImage imageWithData:responseData]];
+    [_pic setFrame:CGRectMake(28, 12, 200, 200)];
+    [_pic setClipsToBounds:YES];
+    [_pic setContentMode:UIViewContentModeScaleAspectFill];
+    [descriptionLabel addSubview:_pic];
+    [_pic release];
+    UIImageView *_border = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"map_border_pic.png"]];
+    [_border setFrame:CGRectMake(28, 12, 200, 200)];
+    [descriptionLabel addSubview:_border];
+    [_border release];
+    
+    UIActivityIndicatorView *_loadingView = (UIActivityIndicatorView*)[descriptionLabel viewWithTag:66];
+    [_loadingView stopAnimating];
+    [_loadingView removeFromSuperview];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)_request
+{
+    //NSError *error = [request error];
 }
 @end

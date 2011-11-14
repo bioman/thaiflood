@@ -191,11 +191,9 @@
         NSLog(@"URL: %@",_url);
         [cell thumbnailFromURL:[NSURL URLWithString:_url]];
     }else{
-        NSRange textRange;
-        textRange =[_url rangeOfString:@"googleapis"];
+        NSRange textRange = [_url rangeOfString:@"googleapis"];
         if(textRange.location == NSNotFound)
         {
-            NSLog(@"AA");
             [cell showCamera:YES];
         }else{
             [cell showCamera:NO];
@@ -212,7 +210,12 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    NSDictionary *_dic = [details objectAtIndex:indexPath.row];
+    NSDictionary *_dic; 
+    if (indexPath.section == 0) {
+        _dic = [details objectAtIndex:indexPath.row];
+    }else{
+        _dic = [details objectAtIndex:indexPath.row+1];
+    }
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setFormatterBehavior:NSDateFormatterBehavior10_4];
     [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
@@ -235,6 +238,7 @@
     [_pinData setObject:_time forKey:@"time"];
     [_pinData setObject:[_dic objectForKey:@"water_level"] forKey:@"level"];
     [_pinData setObject:[_dic objectForKey:@"description"] forKey:@"description"];
+    [_pinData setObject:[_dic objectForKey:@"pic_path"] forKey:@"pic"];
     
     Tab1PinDetailViewController *detailViewController = [[Tab1PinDetailViewController alloc] initWithNibName:@"Tab1PinDetailViewController" bundle:nil];
     [detailViewController startViewData:_pinData];

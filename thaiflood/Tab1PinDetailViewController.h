@@ -7,15 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ASIHTTPRequest.h"
 
-@interface Tab1PinDetailViewController : UIViewController
+@interface Tab1PinDetailViewController : UIViewController <ASIHTTPRequestDelegate>
 {
     IBOutlet UILabel *dateLabel;
     IBOutlet UILabel *timediffLabel;
     IBOutlet UILabel *timeLabel;
     IBOutlet UITextView *descriptionLabel;
     IBOutlet UIImageView *levelImage;
+    ASIHTTPRequest *request;
 }
 @property (nonatomic, strong) NSDictionary *details;
+@property (nonatomic, retain) ASIHTTPRequest *request;
 - (void) startViewData:(NSDictionary*)data;
 @end
