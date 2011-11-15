@@ -210,16 +210,18 @@
     
     NSString *_title2 = [shareDetail objectForKey:@"title"];
 //    NSString *_type = [shareDetail objectForKey:@"type"];
-//    NSString *_message = ((UITextView*)[self getView:TAG_MESSAGE_BOX]).text;
+    NSString *_message = ((UITextView*)[self getView:TAG_MESSAGE_BOX]).text;
 //    NSString *_description = [shareDetail objectForKey:@"description"];
     NSString *_image = [shareDetail objectForKey:@"picture"];
 //    NSString *_link = @"http://www.appspheregroup.com";
+    
+    NSString *_realStr = [NSString stringWithFormat:@"[Flood Update] @%@ %@",_title2,_message];
     
     // add HUD
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = @"Posting";
     
-    [[Social sharedSocial] shareTwitterFloodTitle:_title2 linkURL:_image withDelegate:self];
+    [[Social sharedSocial] shareTwitterFloodTitle:_realStr linkURL:_image withDelegate:self];
 }
 
 -(void) didFinishShare

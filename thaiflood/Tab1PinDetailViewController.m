@@ -53,10 +53,7 @@
     newShadow.frame = CGRectMake(0,navigationBarBottom, self.view.frame.size.width, 3);
     newShadow.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
     [self.view.layer addSublayer:newShadow];
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
+    
     [self.navigationItem setTitle:[details objectForKey:@"title"]];
     [dateLabel setText:[details objectForKey:@"date"]];
     [timeLabel setText:[details objectForKey:@"time"]];
@@ -84,6 +81,11 @@
     }else{
         [descriptionLabel setText:[NSString stringWithFormat:@"%@",[details objectForKey:@"description"]]];
     }
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    
     
     
     
