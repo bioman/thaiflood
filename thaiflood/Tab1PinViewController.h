@@ -9,13 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "ASIHTTPRequest.h"
 
+@class  CurrentLocationAnnotation;
 @interface Tab1PinViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate>
 {
     NSString *latlong;
+    CurrentLocationAnnotation *selectedAnnotation;
 }
 
 @property (nonatomic, strong) NSMutableArray *details;
 @property (nonatomic, strong) NSString *latlong;
+@property (retain, nonatomic) CurrentLocationAnnotation *selectedAnnotation;
 
 - (void) startViewData:(NSDictionary*)data;
 

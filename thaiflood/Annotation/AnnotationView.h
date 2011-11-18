@@ -14,4 +14,5 @@
 
 @property (nonatomic, assign) MKMapView *mapView;
 
+- (void)initRedraw;
 @end

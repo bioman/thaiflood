@@ -15,7 +15,7 @@
 #import "Tab1AddViewController.h"
 #import "Tab1PinViewController.h"
 #import "SBJson.h"
-
+#import "CalloutView.h"
 
 @interface Tab1MainViewController (Privated)
 - (void)showSubMenu;
@@ -24,7 +24,7 @@
 @end
 
 @implementation Tab1MainViewController
-@synthesize mvMapView,locationManager, currentLocation;
+@synthesize mvMapView,locationManager, currentLocation, selectedAnnotation;
 @synthesize mapAnnotations;
 @synthesize address1,address2;
 
@@ -127,6 +127,20 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     
 }
 
+- (void)viewDetail:(UITapGestureRecognizer *)gestureRecognizer 
+{
+    NSLog(@"viewDetail");
+//    NSMutableDictionary *_pinData = [[NSMutableDictionary alloc] init];
+//    [_pinData setObject:[self.currentAnnotation title] forKey:@"title"];
+//    [_pinData setObject:[self.currentAnnotation tag] forKey:@"id"];
+//    [_pinData setObject:[self.currentAnnotation latlong] forKey:@"latlong"];
+//    
+//    Tab1PinViewController *pinViewController = [[Tab1PinViewController alloc] initWithNibName:@"Tab1PinViewController" bundle:nil];
+//    [pinViewController startViewData:_pinData];
+//    [_pinData release];
+//    [[self viewController].navigationController pushViewController:pinViewController animated:YES];
+//    [pinViewController release];
+}
 
 - (MKAnnotationView *)mapView:(MKMapView *)MapView viewForAnnotation:(id <MKAnnotation>)annotation
 {
@@ -134,60 +148,153 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     
     //annotation 
 	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
-	MKAnnotationView *draggablePinView = [MapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
+	//MKAnnotationView *draggablePinView = [MapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
 	
-    if ([annotation isKindOfClass:[MKUserLocation class]])
+    AnnotationView *draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
+    //return draggablePinView;
+    if ([annotation isKindOfClass:[MKUserLocation class]]){
+        NSLog(@"MKUserLocation");
+        MKAnnotationView *draggablePinView = [MapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
         return draggablePinView;
-    
+    }
+        
+//    
 	if (draggablePinView) {
-        NSLog(@"old pin");
-        return draggablePinView;
-//		draggablePinView.annotation = annotation;
-//        UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
-//        draggablePinView.image = pinImage;
-//        draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
-//        draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-//        draggablePinView.canShowCallout = YES;
-//        draggablePinView.draggable = NO;
-	} else {
+//        NSLog(@"old pin");
+//        
         if( [[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"normal"] ) {
-            NSLog(@"normal pin");
-            draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
-            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
-                ((AnnotationView *)draggablePinView).mapView = MapView;
-            }
-            UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+//            UIButton *accessoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//            [accessoryButton setFrame:CGRectMake(60, 11, 27, 27)];
+//            [accessoryButton setTag:101];
+//            //[accessoryButton setUserInteractionEnabled:YES];
+//            [accessoryButton setImage:[UIImage imageNamed:@"button_detail.png"] forState:UIControlStateNormal];
+//            //[accessoryButton addTarget:self action:@selector(viewDetail) forControlEvents:UIControlEventTouchUpInside];
+//            
+//            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewDetail:)];
+//            tap.numberOfTapsRequired = 1;
+//            //tap.delegate = self;
+//            [accessoryButton addGestureRecognizer:tap];
+//            [tap release];
+//            
+//            [draggablePinView addSubview:accessoryButton];
+//            NSLog(@"normal pin");
+//            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
+//                ((AnnotationView *)draggablePinView).mapView = MapView;
+//            }
+//            UIImage *pinImage = [UIImage imageNamed:@"pin_shadow.png"];
+//            draggablePinView.image = pinImage;
+            UIImageView *numberImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button_number.png"]];
+            [numberImageView setFrame:CGRectMake(0, 0, 27, 27)];
+            
+            UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 27, 25)];
+            [numberLabel setText:[((CurrentLocationAnnotation*)annotation) updateCount]];
+            [numberLabel setTextAlignment:UITextAlignmentCenter];
+            [numberLabel setTextColor:[UIColor whiteColor]];
+            [numberLabel setBackgroundColor:[UIColor clearColor]];
+            [numberLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:14]];
+            [numberImageView addSubview:numberLabel];
+            [numberLabel release];
+            draggablePinView.leftCalloutAccessoryView = numberImageView;[numberImageView release];
+            
+            
+            draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            draggablePinView.canShowCallout = YES;
+            draggablePinView.draggable = NO;
+        }else if ( [[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"critical"] ){
+            UIImageView *numberImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button_number.png"]];
+            [numberImageView setFrame:CGRectMake(0, 0, 27, 27)];
+            
+            UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 27, 25)];
+            [numberLabel setText:[((CurrentLocationAnnotation*)annotation) updateCount]];
+            [numberLabel setTextAlignment:UITextAlignmentCenter];
+            [numberLabel setTextColor:[UIColor whiteColor]];
+            [numberLabel setBackgroundColor:[UIColor clearColor]];
+            [numberLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:14]];
+            [numberImageView addSubview:numberLabel];
+            [numberLabel release];draggablePinView.leftCalloutAccessoryView = numberImageView;
+            [numberImageView release];
+            
+            
+            UIImage *pinImage = [UIImage imageNamed:@"pin_red.png"];
             draggablePinView.image = pinImage;
-            draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
             draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
             draggablePinView.canShowCallout = YES;
             draggablePinView.draggable = NO;
         }else if ( [[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"new"] ){
-            NSLog(@"new pin");
-            draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
-            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
-                ((AnnotationView *)draggablePinView).mapView = MapView;
-            }
-            UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+//            NSLog(@"new pin");
+//            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
+//                ((AnnotationView *)draggablePinView).mapView = MapView;
+//            }
+            draggablePinView.rightCalloutAccessoryView = nil;
+            UIImage *pinImage = [UIImage imageNamed:@"pin_add.png"];
             draggablePinView.image = pinImage;
-            draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
-            //draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
             draggablePinView.canShowCallout = YES;
+            draggablePinView.draggable = YES;
             [draggablePinView setSelected:YES animated:YES];
-        }else{
-            NSLog(@"others pin");
-            draggablePinView = [[[AnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:kPinAnnotationIdentifier] autorelease];
-            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
-                ((AnnotationView *)draggablePinView).mapView = MapView;
-            }
-            UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
-            draggablePinView.image = pinImage;
-            draggablePinView.frame = CGRectMake(draggablePinView.frame.origin.x-50, draggablePinView.frame.origin.y-50, draggablePinView.frame.size.width, draggablePinView.frame.size.height);
+        }
+//        
+        return draggablePinView;
+	} else {
+        if( [[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"normal"] ) {
+            UIImageView *numberImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button_number.png"]];
+            [numberImageView setFrame:CGRectMake(0, 0, 27, 27)];
+            
+            UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 27, 25)];
+            [numberLabel setText:[((CurrentLocationAnnotation*)annotation) updateCount]];
+            [numberLabel setTextAlignment:UITextAlignmentCenter];
+            [numberLabel setTextColor:[UIColor whiteColor]];
+            [numberLabel setBackgroundColor:[UIColor clearColor]];
+            [numberLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:14]];
+            [numberImageView addSubview:numberLabel];
+            [numberLabel release];draggablePinView.leftCalloutAccessoryView = numberImageView;
+            [numberImageView release];
+            
             draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
             draggablePinView.canShowCallout = YES;
-            //draggablePinView.tag
-
+            draggablePinView.draggable = NO;
+        }else if ( [[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"critical"] ){
+            UIImageView *numberImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"button_number.png"]];
+            [numberImageView setFrame:CGRectMake(0, 0, 27, 27)];
+            
+            UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 27, 25)];
+            [numberLabel setText:[((CurrentLocationAnnotation*)annotation) updateCount]];
+            [numberLabel setTextAlignment:UITextAlignmentCenter];
+            [numberLabel setTextColor:[UIColor whiteColor]];
+            [numberLabel setBackgroundColor:[UIColor clearColor]];
+            [numberLabel setFont:[UIFont fontWithName:@"Helvetica-Bold" size:14]];
+            [numberImageView addSubview:numberLabel];
+            [numberLabel release];draggablePinView.leftCalloutAccessoryView = numberImageView;
+            [numberImageView release];
+            
+            UIImage *pinImage = [UIImage imageNamed:@"pin_red.png"];
+            draggablePinView.image = pinImage;
+            draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            draggablePinView.canShowCallout = YES;
+            draggablePinView.draggable = NO;
+        }else if ( [[((CurrentLocationAnnotation*)annotation) type] isEqualToString:@"new"] ){
+//            NSLog(@"new pin");
+//            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
+//                ((AnnotationView *)draggablePinView).mapView = MapView;
+//            }
+            draggablePinView.rightCalloutAccessoryView = nil;
+            UIImage *pinImage = [UIImage imageNamed:@"pin_add.png"];
+            draggablePinView.image = pinImage;
+            draggablePinView.canShowCallout = YES;
+            draggablePinView.draggable = YES;
+            [draggablePinView setSelected:YES animated:YES];
+        }else{
+//            NSLog(@"others pin");
+//            if ([draggablePinView isKindOfClass:[AnnotationView class]]) {
+//                ((AnnotationView *)draggablePinView).mapView = MapView;
+//            }
+//            UIImage *pinImage = [UIImage imageNamed:@"pin_shadow.png"];
+//            draggablePinView.image = pinImage;
+//            draggablePinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+//            draggablePinView.canShowCallout = YES;
+//            //draggablePinView.tag
+//
         }
+
         return draggablePinView;
 //        [draggablePinView addObserver:self
 //                  forKeyPath:@"selected"
@@ -201,9 +308,10 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)annotationView didChangeDragState:(MKAnnotationViewDragState)newState fromOldState:(MKAnnotationViewDragState)oldState 
 {
-    
-    if (oldState == MKAnnotationViewDragStateDragging) {
 
+    NSLog(@"dragggg");
+    if (oldState == MKAnnotationViewDragStateStarting) {
+        NSLog(@"MKAnnotationViewDragStateDragging");
         
         
         selectedAnnotation = (CurrentLocationAnnotation *)annotationView.annotation;
@@ -227,8 +335,16 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
         
 		selectedAnnotation.title = [NSString stringWithString:@"Loading...                     "];
         selectedAnnotation.subtitle = [NSString stringWithFormat:@"%f %f", selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude];
+        
+        [annotationView setDragState:MKAnnotationViewDragStateNone];
         //[self connectDots];
-	}
+	}else if (oldState == MKAnnotationViewDragStateStarting) {
+        NSLog(@"MKAnnotationViewDragStateStarting");
+        //[annotationView setDragState:MKAnnotationViewDragStateDragging];
+    }else if (oldState == MKAnnotationViewDragStateEnding) {
+        NSLog(@"MKAnnotationViewDragStateEnding");
+        
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -257,26 +373,55 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
     NSLog(@"didDeselectAnnotationView");
+//    for (UIView *views in [view subviews]) {
+//        if([views isKindOfClass:[CalloutView class]])
+//        {
+//            NSLog(@"remove callout");
+//            [views removeFromSuperview];
+//        }
+//    }
     //view.image = [UIImage imageNamed:@"pin.png"];
-    UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
-    view.image = pinImage;
-    view.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    view.canShowCallout = YES;
-    view.draggable = NO;
+    //UIImage *pinImage = [UIImage imageNamed:@"pin_shadow.png"];
+    //view.image = pinImage;
+
 }
+
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
     //I think here you will be adding a annotation(my assumption)
     NSLog(@"didSelectAnnotationView");
+    [self setSelectedAnnotation:view.annotation];
     //view.image = [UIImage imageNamed:@"pin.png"];
     //[mapView addAnnotation:yourAnnotation];
     //This will call viewForAnnotation again
-    UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
-    view.image = pinImage;
-    view.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    view.canShowCallout = YES;
-    view.draggable = NO;
+    //UIImage *pinImage = [UIImage imageNamed:@"pin_shadow.png"];
+    //view.image = pinImage;
+    NSLog(@"Title %@",[(CurrentLocationAnnotation*)view.annotation title]);
+    
+//    /[mapView setCenterCoordinate:((CurrentLocationAnnotation*)view.annotation).coordinate  animated:YES];
+
+    
+//    CalloutView *callOutView = [[CalloutView alloc] initWithAnnotation:(CurrentLocationAnnotation*)view.annotation];
+//    //[callOutView setFrame:CGRectMake(100, 100, 100, 100)];
+//    [view setFrame:CGRectMake(0, 0, 100, 100)];
+//    //[callOutView setFrame:view.frame];
+//    [mapView addSubview:callOutView];
+//    [view setBackgroundColor:[UIColor redColor]];
+//    for (UIView *calloutview in [view subviews]) {
+//        NSLog(@"%@",[calloutview description]);
+//        for (UIView *accview in [calloutview subviews]) {
+//            
+//            if (accview.tag == 101) {
+//                NSLog(@"101 %@",[accview description]);
+//                [calloutview bringSubviewToFront:accview];
+//            }
+//        }
+//        [view bringSubviewToFront:calloutview];
+//    }
+//    
+//    
+//    [callOutView release];
     
 }
 
@@ -298,9 +443,11 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     
     Tab1PinViewController *pinViewController = [[Tab1PinViewController alloc] initWithNibName:@"Tab1PinViewController" bundle:nil];
     [pinViewController startViewData:_pinData];
+    [pinViewController setSelectedAnnotation:selectedAnnotation];
     [_pinData release];
     [self.navigationController pushViewController:pinViewController animated:YES];
     [pinViewController release];
+    
 }
 
 #pragma mark - NSURLConnection Delegate
@@ -371,8 +518,13 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
                 [theLocation setTitle:addtitle];
                 [theLocation setSubtitle:[NSString stringWithFormat:@"%@,%@",[dict objectForKey:@"lat"],[dict objectForKey:@"lng"]]];
                 [theLocation setLatlong:[NSString stringWithFormat:@"%@_%@",[dict objectForKey:@"lat"],[dict objectForKey:@"lng"]]];
-                [theLocation setType:@"normal"];
+                if([[dict objectForKey:@"pin_type"] intValue] == 1){
+                    [theLocation setType:@"critical"];
+                }else{
+                    [theLocation setType:@"normal"];
+                }
                 [theLocation setTag:[dict objectForKey:@"pin_id"]];
+                [theLocation setUpdateCount:[dict objectForKey:@"update_count"]];
                 [mapAnnotations addObject:theLocation];
                 
             }
@@ -451,6 +603,9 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = @"Getting Coordinates";
     
+    
+    //[mvMapView removeAnnotations:mapAnnotations];
+    [mapAnnotations addObject:selectedAnnotation];
 	[mvMapView addAnnotation:selectedAnnotation];
     
     
@@ -458,6 +613,10 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     
     //Show sub-menu
     [self showSubMenu];
+    
+    
+    //disable add point button
+    [[self.navigationItem rightBarButtonItem] setEnabled:NO];
 }
 
 - (void)searchPoint
@@ -466,10 +625,11 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 }
 
 
-
+#pragma mark
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
+
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -508,6 +668,8 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     mapAnnotations = [[NSMutableArray alloc] init];
     [mvMapView setMapType:MKMapTypeStandard];
 	[mvMapView setDelegate:self];
+    [mvMapView setShowsUserLocation:YES];
+    
     
 	locationManager = [[CLLocationManager alloc] init];
 	[locationManager setDelegate:self];
@@ -526,18 +688,17 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     [locationManager startUpdatingLocation];
 
     
-    
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [mvMapView removeAnnotations:[mvMapView annotations]]; 
+    [mvMapView removeAnnotations:mapAnnotations]; 
     [self getAllPin];
 }
 
 - (void)viewDidUnload
 {
+    [self setSelectedAnnotation:nil];
     [self setAddress2:nil];
     [self setAddress1:nil];
     [self setMapAnnotations:nil];
@@ -549,6 +710,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
 
 - (void)dealloc
 {
+    [selectedAnnotation release];
     [address2 release];
     [address1 release];
     [mapAnnotations release];
@@ -610,6 +772,8 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     
     
     [self hideSubMenu];
+    //enable add point button
+    [[self.navigationItem rightBarButtonItem] setEnabled:YES];
 }
 
 - (IBAction)submitAdd:(UIButton*)sender {
@@ -620,6 +784,9 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     [self.navigationController pushViewController:addViewController animated:YES];
     [addViewController release];
     [self hideSubMenu];
+    
+    //enable add point button
+    [[self.navigationItem rightBarButtonItem] setEnabled:YES];
 }
 
 - (void)showOrHideSearchBar
@@ -642,6 +809,7 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     }
     
 }
+
 
 
 @end

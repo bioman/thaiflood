@@ -18,5 +18,6 @@
 @property (nonatomic, retain) NSString *type;
 @property (nonatomic, retain) NSString *tag;
 @property (nonatomic, retain) NSString *latlong;
+@property (nonatomic, retain) NSString *updateCount;
 
 @end

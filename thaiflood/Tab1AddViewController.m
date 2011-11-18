@@ -26,6 +26,7 @@
 @synthesize imageData;
 @synthesize address1;
 @synthesize address2;
+@synthesize customAddress;
 @synthesize staticMapIndicator;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -75,12 +76,15 @@
     
     NSLog(@"address1 :%@",address1);
     NSLog(@"address2 :%@",address2);
+    
+    
     [self initialData];
     
 }
 
 - (void)viewDidUnload
 {
+    [self setCustomAddress:nil];
     [self setAddress2:nil];
     [self setAddress1:nil];
     [self setImageData:nil];
@@ -115,7 +119,7 @@
 }
 
 - (void)dealloc {
-    
+    [customAddress release];
     [address2 release];
     [address1 release];
     [imageData release];
@@ -323,7 +327,8 @@
     NSString *_url = [NSString stringWithString:@"http://appspheregroup.com/flood/addpin.php"];
     ASIFormDataRequest *request2 = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:_url]];
     NSLog(@"selectedAnnotation %f %f",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude);
-    [request2 setPostValue:[NSString stringWithFormat:@"[{\"lat\":%f,\"lng\":%f,\"address1\":\"%@\",\"address2\":\"%@\",\"address_custom\":\"%@\",\"pin_type\":1,\"created_by\":0,\"description\":\"%@\",\"water_level\":%i}]",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude,address1,address2,@"",descriptionTextView .text,water_level] forKey:@"data"];
+    [request2 setPostValue:[NSString stringWithFormat:@"[{\"pin_id\":%@,\"lat\":%f,\"lng\":%f,\"address1\":\"%@\",\"address2\":\"%@\",\"address_custom\":\"%@\",\"pin_type\":1,\"created_by\":0,\"description\":\"%@\",\"water_level\":%i}]",selectedAnnotation.tag,selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude,address1,address2,@"",descriptionTextView .text,water_level] forKey:@"data"];
+    NSLog(@"pin_id = %@ ",selectedAnnotation.tag);
     [request2 setPostValue:[NSString stringWithFormat:@"%f",selectedAnnotation.coordinate.latitude] forKey:@"latitude"];
     [request2 setPostValue:[NSString stringWithFormat:@"%f",selectedAnnotation.coordinate.longitude] forKey:@"longitude"];
     
@@ -430,7 +435,12 @@
     [staticMapIndicator startAnimating];
     
     // address
-    [self.address setText:[NSString stringWithFormat:@"%@",[selectedAnnotation title]]];
+    if([selectedAnnotation title] != nil) {
+        [self.address setText:[NSString stringWithFormat:@"%@",[selectedAnnotation title]]];
+    }else{
+        [self.address setText:[NSString stringWithFormat:@"%@",customAddress]];
+    }
+    
     
     // latitude
     [self.coordinateLabel setText:[NSString stringWithFormat:@"(%f , %f)",selectedAnnotation.coordinate.latitude,selectedAnnotation.coordinate.longitude]];

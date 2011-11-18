@@ -17,6 +17,7 @@
     
     NSString *address1;
     NSString *address2;
+    NSString *customAddress;
     int water_level;
 }
 
@@ -33,6 +34,7 @@
 @property (retain, nonatomic) IBOutlet UITextView *descriptionTextView;
 @property (retain, nonatomic) IBOutlet NSString *address1;
 @property (retain, nonatomic) IBOutlet NSString *address2;
+@property (retain, nonatomic) IBOutlet NSString *customAddress;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *staticMapIndicator;
 
 
