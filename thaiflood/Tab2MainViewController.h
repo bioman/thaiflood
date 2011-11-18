@@ -15,6 +15,7 @@
     BOOL isLoading;
     
     NSMutableArray *annoucementArray;
+    
 }
 
 @property (retain, nonatomic) IBOutlet UITableView *annoucementTableView;

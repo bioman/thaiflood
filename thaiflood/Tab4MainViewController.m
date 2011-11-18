@@ -243,6 +243,15 @@
     }];
 }
 
+-(void)facebookDidCancelLogIn
+{
+    UIActivityIndicatorView *_loadingFB = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_FACEBOOK_LOADING];
+    [_loadingFB stopAnimating];
+    [_loadingFB setHidden:YES];
+    UIView *_signinFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_IN];
+    [_signinFB setHidden:NO];
+}
+
 #pragma mark - Twitter
 
 - (IBAction)twitterSignInTap:(id)sender {
@@ -348,6 +357,20 @@
             }];
         }];
     }];
+}
+
+-(void)twitterDidCancelLogIn
+{
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Twitter Account"
+                                                        message:@"There are no Twitter Account on your device. Please go to Setting > Twitter to sign in your account." delegate:self 
+                                              cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];
+    [alertView release];
+    UIActivityIndicatorView *_loadingTW = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_TWITTER_LOADING];
+    [_loadingTW stopAnimating];
+    [_loadingTW setHidden:YES];
+    UIView *_signinTW = [self.view viewWithTag:TAG_TWITTER_SIGN_IN];
+    [_signinTW setHidden:NO];
 }
 
 @end

@@ -11,6 +11,8 @@
 @protocol Social2Tab4Delegate <NSObject>
 - (void) facebookDidFinishLogIn;
 - (void) facebookDidFinishLogOut;
+- (void) facebookDidCancelLogIn;
 - (void) twitterDidFinishLogIn;
 - (void) twitterDidFinishLogOut;
+- (void) twitterDidCancelLogIn;
 @end

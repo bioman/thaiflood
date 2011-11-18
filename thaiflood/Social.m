@@ -123,7 +123,7 @@ static Social *_instance;
 
 - (void) logInFacebook:(id<Social2Tab4Delegate>)delegate
 {
-    self.tab4Delegate = delegate;
+    _instance.tab4Delegate = delegate;
     if (![_instance.facebook isSessionValid]) {
         NSArray* permissions =  [NSArray arrayWithObjects: PERMISSION_OFFLINE_ACCESS, PERMISSION_STREAM, PERMISSION_READ, nil];
         [_instance.facebook authorize:permissions];
@@ -132,7 +132,7 @@ static Social *_instance;
 
 - (void) logOutFacebook:(id<Social2Tab4Delegate>)delegate
 {
-    self.tab4Delegate = delegate;
+    _instance.tab4Delegate = delegate;
     [_instance.facebook logout:_instance];
 }
 
@@ -146,8 +146,8 @@ static Social *_instance;
 }
 
 - (void)getFBUserInfo{
-    [_instance.facebook requestWithGraphPath:@"me" andDelegate:self];
-    [_instance.facebook requestWithGraphPath:@"me/picture" andDelegate:self];
+    [_instance.facebook requestWithGraphPath:@"me" andDelegate:_instance];
+    [_instance.facebook requestWithGraphPath:@"me/picture" andDelegate:_instance];
 }
 
 - (void)fbDidLogin 
@@ -160,8 +160,10 @@ static Social *_instance;
     [_instance getFBUserInfo];
 }
 
+
 -(void)fbDidNotLogin:(BOOL)cancelled {
     NSLog(@"did not login"); //be called when user cancle
+    [_instance.tab4Delegate facebookDidCancelLogIn];
 }
 
 - (void) fbDidLogout 
@@ -189,7 +191,7 @@ static Social *_instance;
 
 - (void) shareFacebookFloodTitle:(NSString*)_title detail:(NSString*)_detail linkURL:(NSString*)_link imageURL:(NSString*)_image caption:(NSString*)_caption messsage:(NSString*)_message withDelegate:(id<Social2ShareDelegate>)delegate
 {
-    self.shareDelegate = delegate;
+    _instance.shareDelegate = delegate;
     
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    _link, FEED_LINK,
@@ -206,7 +208,7 @@ static Social *_instance;
     [_instance.facebook requestWithGraphPath:@"me/feed"
                           andParams:params
                       andHttpMethod:@"POST"
-                        andDelegate:self]; 
+                        andDelegate:_instance]; 
 
 }
 
@@ -313,10 +315,15 @@ static Social *_instance;
                             }
                             
                         }];
+                    }else{
+                        //have twitter API but ano account signed
+                        [delegate twitterDidCancelLogIn];
                     }
                 }
             }
         }];
+    }else{
+        //no twitter API.
     }
 }
 
