@@ -29,19 +29,37 @@
 	//self.hasBuiltInDraggingSupport = [[MKAnnotationView class] instancesRespondToSelector:NSSelectorFromString(@"isDraggable")];
 	
 	//if (self.hasBuiltInDraggingSupport) {
-		if ((self = (AnnotationView*)[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier])) {
+		if ((self = (AnnotationView*)[[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier])) {
 			//[self performSelector:NSSelectorFromString(@"setDraggable:") withObject:[NSNumber numberWithBool:YES]];
 		}
 	//}
-    UIImage *pinImage = [UIImage imageNamed:@"pin.png"];
+    self.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    UIImage *pinImage = [UIImage imageNamed:@"pin_shadow.png"];
     self.image = pinImage;
     //self.frame = CGRectMake(self.frame.origin.x-50, self.frame.origin.y-50, self.frame.size.width, self.frame.size.height);
     //self.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     //self.canShowCallout = YES;
-    self.draggable = YES;
-	self.canShowCallout = YES;
-	
-	return self;
+    self.draggable = NO;
+	//self.canShowCallout = YES;
+	self.frame = CGRectMake( 0,0,46,38);
+    self.centerOffset = CGPointMake(12, -15);
+	self.calloutOffset = CGPointMake(-10, 0);
+    return self;
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    NSLog(@"123123131");
+    [super setSelected:selected animated:animated];
+    
+    if(selected)
+    {
+        //Add your custom view to self...
+    }
+    else
+    {
+        //Remove your custom view...
+    }
 }
 
 - (void)initRedraw {

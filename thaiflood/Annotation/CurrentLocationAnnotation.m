@@ -8,13 +8,13 @@
 
 #import "CurrentLocationAnnotation.h"
 
-
 @implementation CurrentLocationAnnotation
 @synthesize coordinate;
 @synthesize title;
 @synthesize subtitle;
 @synthesize type, tag;
 @synthesize latlong;
+@synthesize updateCount;
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D)coord addressDictionary:(NSDictionary *)addressDictionary {
 	

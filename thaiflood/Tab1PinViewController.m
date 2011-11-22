@@ -12,13 +12,15 @@
 #import "Tab1PinDetailViewController.h"
 #import "MBProgressHUD.h"
 #import "SBJson.h"
+#import "Tab1AddViewController.h"
+#import "CurrentLocationAnnotation.h"
 
 @interface Tab1PinViewController (Privated)
 -(NSString *)dateDiff:(NSString *)origDate;
 @end
 
 @implementation Tab1PinViewController
-@synthesize details, latlong;
+@synthesize details, latlong, selectedAnnotation;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -69,6 +71,7 @@
     newShadow.frame = CGRectMake(0,navigationBarBottom, self.view.frame.size.width, 3);
     newShadow.colors = [NSArray arrayWithObjects:(id)darkColor, (id)lightColor, nil];
     [self.view.layer addSublayer:newShadow];
+    
 }
 
 - (void) startViewData:(NSDictionary*)data
@@ -307,12 +310,17 @@
         return[NSString stringWithFormat:@"%d day%@ ago", diff,_s];
     } else {
         return @"never";
-    }   
+    }
 }
 
 - (void)addDetail
 {
-    
+    NSLog(@"addDetail %f %f",selectedAnnotation.coordinate.latitude, selectedAnnotation.coordinate.longitude);
+    Tab1AddViewController *addViewController = [[Tab1AddViewController alloc] initWithNibName:@"Tab1AddViewController" bundle:nil];
+    [addViewController setSelectedAnnotation:selectedAnnotation];
+    [addViewController setCustomAddress:[self.navigationItem title]];
+    [self.navigationController pushViewController:addViewController animated:YES];
+    [addViewController release];
 }
 
 @end

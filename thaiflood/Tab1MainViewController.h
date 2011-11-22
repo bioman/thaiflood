@@ -23,6 +23,7 @@
 }
 
 @property (nonatomic, strong) IBOutlet MKMapView *mvMapView;
+@property (retain, nonatomic) CurrentLocationAnnotation *selectedAnnotation;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) CLLocation *currentLocation;
 @property (nonatomic, strong) NSMutableArray *mapAnnotations;
@@ -32,5 +33,5 @@
 - (IBAction)cancleAdd:(UIButton*)sender;
 - (IBAction)submitAdd:(UIButton*)sender;
 - (void)getAllPin;
-
+- (void) viewDetail;
 @end
