@@ -361,6 +361,7 @@
 
 -(void)twitterDidCancelLogIn
 {
+    NSLog(@"twitterDidCancelLogIn");
     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Twitter Account"
                                                         message:@"There are no Twitter Account on your device. Please go to Setting > Twitter to sign in your account." delegate:self 
                                               cancelButtonTitle:@"OK" otherButtonTitles:nil];

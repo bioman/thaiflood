@@ -316,7 +316,8 @@ static Social *_instance;
                             
                         }];
                     }else{
-                        //have twitter API but ano account signed
+                        //have twitter API but no account signed
+                        NSLog(@"have twitter API but no account signed");
                         [delegate twitterDidCancelLogIn];
                     }
                 }
@@ -324,6 +325,8 @@ static Social *_instance;
         }];
     }else{
         //no twitter API.
+        NSLog(@"no twitter API.");
+        [delegate twitterDidCancelLogIn];
     }
 }
 
@@ -350,6 +353,26 @@ static Social *_instance;
     }else{
         return YES;
     }
+}
+
+- (void)directLogInTwitter:(NSString*)username andPassword:(NSString*)password
+{
+//    NSMutableArray *arrayOfAccounts = [[NSMutableArray alloc] init];
+//    if ([TWTweetComposeViewController canSendTweet]) 
+//    {
+//        ACAccountStore *account = [[ACAccountStore alloc] init];
+//        ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+//        [account requestAccessToAccountsWithType:accountType withCompletionHandler:^(BOOL granted, NSError *error) 
+//         {
+//             if (granted == YES)
+//             {
+//                 [arrayOfAccounts addObjectsFromArray:[account accountsWithAccountType:accountType]];
+//        
+//                 if ([arrayOfAccounts count] > 0) 
+//                     [self performSelectorOnMainThread:@selector(updateTableview) withObject:NULL waitUntilDone:NO];
+//             }
+//         }];
+//    }
 }
 
 - (void) shareTwitterFloodTitle:(NSString *)_title linkURL:(NSString *)_link withDelegate:(id<Social2ShareDelegate>)delegate

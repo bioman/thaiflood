@@ -158,7 +158,7 @@
     //set value
     [self.dateDiffLabel setText:[self dateDiff:[annoucementDetail objectForKey:@"created_date"]]];
     [self.titleLabel setText:[annoucementDetail objectForKey:@"title"]];
-    [self.detailTextView setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n%@",[annoucementDetail objectForKey:@"description"]]];
+    [self.detailTextView setText:[NSString stringWithFormat:@"\n\n\n\n\n\n\n\n\n%@",[annoucementDetail objectForKey:@"description"]]];
     
     UIActivityIndicatorView *_loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     [_loadingView setTag:66];
