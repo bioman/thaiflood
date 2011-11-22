@@ -17,4 +17,6 @@
 - (IBAction)facebookSignOutTap:(id)sender;
 - (IBAction)twitterSignOutTap:(id)sender;
 
+-(void)facebookDidCancelLogIn;
+
 @end

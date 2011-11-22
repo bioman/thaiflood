@@ -33,5 +33,5 @@
 - (IBAction)cancleAdd:(UIButton*)sender;
 - (IBAction)submitAdd:(UIButton*)sender;
 - (void)getAllPin;
-- (void) viewDetail;
+//- (void) viewDetail;
 @end

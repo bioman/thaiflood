@@ -9,6 +9,7 @@
 #import "thaifloodAppDelegate.h"
 #import "SCAppUtils.h"
 #import "Social.h"
+#import "Tab4MainViewController.h"
 
 @implementation thaifloodAppDelegate
 
@@ -65,6 +66,11 @@
     /*
      Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
      */
+    NSInteger _index = [self.tabBarController selectedIndex];
+    if (_index == 3) {
+        Tab4MainViewController *_tab4 = (Tab4MainViewController*)[(UINavigationController*)[self.tabBarController selectedViewController] topViewController];
+        [_tab4 facebookDidCancelLogIn];
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

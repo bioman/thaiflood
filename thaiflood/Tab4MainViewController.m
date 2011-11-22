@@ -126,6 +126,17 @@
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    UIActivityIndicatorView *_loadingFB = (UIActivityIndicatorView*)[self.view viewWithTag:TAG_FACEBOOK_LOADING];
+    if ([_loadingFB isAnimating]) {
+        [_loadingFB stopAnimating];
+        [_loadingFB setHidden:YES];
+        UIView *_signinFB = [self.view viewWithTag:TAG_FACEBOOK_SIGN_IN];
+        [_signinFB setHidden:NO];
+    }
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];

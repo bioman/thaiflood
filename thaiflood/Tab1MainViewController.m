@@ -655,14 +655,14 @@ NSString * const GMAP_ANNOTATION_SELECTED = @"gmapselected";
     [self.navigationItem setRightBarButtonItem:customBarItem];
     [customBarItem release];
     
-    UIImage *buttonImage2 = [UIImage imageNamed:@"button_search.png"];
-    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button2 setImage:buttonImage2 forState:UIControlStateNormal];
-    [button2 addTarget:self action:@selector(searchPoint) forControlEvents:UIControlEventTouchUpInside];
-    button2.frame = CGRectMake(0, 0, buttonImage2.size.width, buttonImage2.size.height);
-    UIBarButtonItem *customBarItem2 = [[UIBarButtonItem alloc] initWithCustomView:button2];
-    [self.navigationItem setLeftBarButtonItem:customBarItem2];
-    [customBarItem2 release];
+//    UIImage *buttonImage2 = [UIImage imageNamed:@"button_search.png"];
+//    UIButton *button2 = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [button2 setImage:buttonImage2 forState:UIControlStateNormal];
+//    [button2 addTarget:self action:@selector(searchPoint) forControlEvents:UIControlEventTouchUpInside];
+//    button2.frame = CGRectMake(0, 0, buttonImage2.size.width, buttonImage2.size.height);
+//    UIBarButtonItem *customBarItem2 = [[UIBarButtonItem alloc] initWithCustomView:button2];
+//    [self.navigationItem setLeftBarButtonItem:customBarItem2];
+//    [customBarItem2 release];
     
     
     mapAnnotations = [[NSMutableArray alloc] init];
